@@ -1,0 +1,35 @@
+Port: 6008
+#Address: 0.0.0.0:8080
+ReadTimeout: 10,
+WriteTimeout: 600,
+Static: public
+
+log:
+  level: debug                # debug->info->warn->error
+  file_name: log/minegin.log  # debug file path
+  max_size_mb: 1              # max log file size
+  max_file_num: 64            # max log file num
+  max_file_day: 7             # max log file day
+  compress: false             # 日志压缩
+  stdout: true                # 显式指定日志输出到 stdout
+  only_stdout: true           # 日志仅输出到 stdout
+
+db:
+  type: mysql                        # * DB_TYPE mysql, sqlite
+  addr: xxxx.xxxx.xxxx.xxxx:3306     # * DB_ADDR example for sqlite
+  name: MYSQL_NAME                   # DB_NAME only mysql
+  username: USERNAME                 # DB_USERNAME only mysql
+  password: PASSWORD                 # DB_PASSWORD only mysql
+
+redis:
+  addr: xxxx.xxxx.xxxx.xxxx:6379     # * REDIS_ADDR
+  password: PASSWORD                 # * REDIS_PASSWORD
+  db: 0                              # * REDIS_DB
+
+bjpfd:
+  notion_token: YOUR_NOTION_TOKEN      # * NOTION_TOKEN
+  account_pid: YOUR_ACCOUNT_PID        # * ACCOUNT_PID
+  bills_pid: YOUR_BILLS_PID            # * BILLS_PID
+  i_account_pid: YOUR_I_ACCOUNT_PID    # * I_ACCOUNT_PID
+  investment_pid: YOUR_INVESTMENT_PID  # * INVESTMENT_PID
+  budget_pid: YOUR_BUDGET_PID          # * BUDGET_PID

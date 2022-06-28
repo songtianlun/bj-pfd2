@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+minepin
+tmp
+.idea
+log/*.log
+.air.toml
+bj-pfd2.db
+config.yaml
