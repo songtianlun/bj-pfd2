@@ -131,6 +131,8 @@ func GetAllInvestment() (is model.Investments) {
 			break
 		}
 	}
+	log.InfoF("Success to Get [%v] Investments.", len(is))
+
 	return
 }
 
@@ -138,7 +140,7 @@ func GetAllBudget() (bs model.Budgets) {
 	start := ""
 	budgetPid := cfg.GetString("bjpfd.budget_pid")
 	for true {
-		db, err := GetNotionDbByCache(budgetPid, start, 1, false)
+		db, err := GetNotionDbByCache(budgetPid, start, 100, false)
 		if err != nil {
 			return
 		}
@@ -155,16 +157,18 @@ func GetAllBudget() (bs model.Budgets) {
 }
 
 func TestCode() {
+	GetAllAccount()
 	abs := GetAllAccount()
 	bs := GetAllBills()
-
 	abs = *StatisticSpend(&abs, bs)
-	fmt.Println(abs.GenerateReport())
 
 	ias := GetAllInvestmentAccount()
 	is := GetAllInvestment()
-	StatisticInvestment(&ias, &is)
+	ias = *StatisticInvestment(&ias, &is)
 
 	bgs := GetAllBudget()
+
+	fmt.Println(abs.GenerateReport())
+	fmt.Println(ias.GenerateReport())
 	fmt.Println(bgs.GenerateReport())
 }

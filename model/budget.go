@@ -53,8 +53,8 @@ func (nb *NotionBody) ParseBudget() (bs Budgets) {
 		b := Budget{
 			PID:    re.ID,
 			Money:  re.Properties.Money2.Number,
-			Real:   re.Properties.RlMoney.Rollup.Number,
-			Remain: re.Properties.REMoney.Formula.Number,
+			Real:   0,
+			Remain: 0,
 			Year:   re.Properties.Year.Formula.Number,
 			Month:  re.Properties.Month.Formula.Number,
 		}

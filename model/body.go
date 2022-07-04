@@ -54,6 +54,8 @@ type Properties struct {
 	Note           PName          `json:"备注"`
 	Money          PNumber        `json:"数额"`
 	RAccount       RAccount       `json:"关联账户"`
+	// for account
+	AType AType `json:"类型"`
 	// for investment account
 	Earn Earning `json:"收益"`
 	// for investment
@@ -64,6 +66,18 @@ type Properties struct {
 	Money2  PNumber `json:"预算"`
 	RlMoney RNumber `json:"实际花销"`
 	REMoney FNumber `json:"剩余"`
+}
+
+type AType struct {
+	ID     string `json:"id"`
+	Select Select `json:"select"`
+	Type   string `json:"type"`
+}
+
+type Select struct {
+	Color string `json:"color"`
+	ID    string `json:"id"`
+	Name  string `json:"name"`
 }
 
 type FNumber struct {
