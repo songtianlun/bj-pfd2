@@ -8,10 +8,12 @@ import (
 type Accounts []Account
 type AccountMap map[string]Account
 type Account struct {
-	PID   string
-	Name  string
-	Money float64
-	Type  string
+	PID      string
+	Name     string
+	Money    float64
+	IMoney   float64 // Investment money
+	IEarning float64 // Investment earning
+	Type     string
 }
 
 func (asm *AccountMap) MapToArray() *Accounts {
@@ -36,6 +38,7 @@ func (as *Accounts) GenerateReport() string {
 	var s string
 	sort.Sort(as)
 	s += "账户报告：\n"
+	s += "账户\t账户余额\t投资总额\t收益\n"
 	var cas float64
 	for _, a := range *as {
 		if a.Name == "信用账户合计" {
@@ -47,7 +50,7 @@ func (as *Accounts) GenerateReport() string {
 		} else if a.Name == "总计" {
 			continue
 		}
-		s += fmt.Sprintf("%s:\t%.2f\n", a.Name, a.Money)
+		s += fmt.Sprintf("%s:\t%.2f\t%.2f\t%.2f\n", a.Name, a.Money, a.IMoney, a.IEarning)
 	}
 	return s
 }

@@ -14,7 +14,7 @@ import (
 func GetNotionDB(dbID string, start string, size int32) (rs string, err error) {
 	notionToken := cfg.GetString("bjpfd.notion_token")
 	url := "https://api.notion.com/v1/databases/" + dbID + "/query"
-	log.DebugF("GetNotionDB [%v_%v] By Notion [%v]", dbID, start, url)
+	log.DebugF("GetNotionDB [%v_%v] By Notion", dbID, start)
 	body := model.NotionBodyPrams{
 		StartCursor: start,
 		PageSize:    size,
@@ -165,6 +165,7 @@ func TestCode() {
 	ias := GetAllInvestmentAccount()
 	is := GetAllInvestment()
 	ias = *StatisticInvestment(&ias, &is)
+	abs = *StatisticAccountWithIAccount(&abs, &ias)
 
 	bgs := GetAllBudget()
 
