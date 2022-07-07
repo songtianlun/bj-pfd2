@@ -50,10 +50,9 @@ func (ias *IAccounts) GenerateReport() string {
 	var s string
 	sort.Sort(ias)
 	s += "投资账户报告：\n"
-	s += "账户余额\t收益\t账户名称\n"
-
+	//s += "账户名称\t账户余额\t收益\n"
 	for _, a := range *ias {
-		s += fmt.Sprintf("%.2f\t%.2f\t%s\n", a.Money, a.Earning, a.Name)
+		s += fmt.Sprintf("%s: %.2f (%.2f)\n", a.Name, a.Money, a.Earning)
 	}
 	return s
 }
