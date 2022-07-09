@@ -168,6 +168,8 @@ func TestCode() {
 	abs = *StatisticAccountWithIAccount(&abs, &ias)
 
 	bgs := GetAllBudget()
+	bgs = *StatisticBillsWithBudget(&bs, &bgs)
+	bgs.StatisticRemain()
 
 	fmt.Println(abs.GenerateReport())
 	fmt.Println(ias.GenerateReport())

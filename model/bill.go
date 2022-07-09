@@ -10,6 +10,7 @@ type Bill struct {
 	Day     int64
 	Trace   bool
 	Account string
+	Budget  string
 	Type    string
 }
 
@@ -32,6 +33,9 @@ func (nb *NotionBody) ParseBill() (bills Bills) {
 		}
 		if len(re.Properties.RAccount.Relation) > 0 {
 			b.Account = re.Properties.RAccount.Relation[0].ID
+		}
+		if len(re.Properties.RBudget.Relation) > 0 {
+			b.Budget = re.Properties.RBudget.Relation[0].ID
 		}
 		bills = append(bills, b)
 	}

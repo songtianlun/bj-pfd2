@@ -6,6 +6,7 @@ import (
 )
 
 type Budgets []Budget
+type BudgetsMap map[string]Budget
 type Budget struct {
 	PID    string
 	Money  float64
@@ -13,6 +14,30 @@ type Budget struct {
 	Remain float64
 	Year   int64
 	Month  int64
+}
+
+func (bgm *BudgetsMap) MapToArray() *Budgets {
+	bgs := Budgets{}
+	for _, v := range *bgm {
+		bgs = append(bgs, v)
+	}
+	return &bgs
+}
+
+func (bgs *Budgets) ArrayToMap() *BudgetsMap {
+	bgm := BudgetsMap{}
+	for _, bg := range *bgs {
+		if bg.PID != "" {
+			bgm[bg.PID] = bg
+		}
+	}
+	return &bgm
+}
+
+func (bgs *Budgets) StatisticRemain() {
+	for i, b := range *bgs {
+		((*bgs)[i]).Remain = b.Money + b.Real
+	}
 }
 
 func (bgs *Budgets) Len() int {
@@ -35,12 +60,12 @@ func (bgs *Budgets) GenerateReport() string {
 	var s string
 	sort.Sort(bgs)
 	s += "预算报告：\n"
-	s += "年-月\t预算\t实际\t剩余\n"
+	s += "年-月 \t 预算 \t 实际 \t 剩余 \t 日均\n"
 	for _, bg := range *bgs {
 		if bg.Year == 0 || bg.Month == 0 {
 			continue
 		}
-		s += fmt.Sprintf("%v-%v %.2f %.2f %.2f\n", bg.Year, bg.Month, bg.Money, bg.Real, bg.Remain)
+		s += fmt.Sprintf("%v-%v \t %.2f \t %.2f \t %.2f \t %.2f\n", bg.Year, bg.Month, bg.Money, bg.Real, bg.Remain, bg.Real/float64(30))
 	}
 	return s
 }

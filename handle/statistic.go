@@ -79,3 +79,14 @@ func StatisticAccountWithIAccount(as *model.Accounts, ias *model.IAccounts) *mod
 	}
 	return asm.MapToArray()
 }
+
+func StatisticBillsWithBudget(bs *model.Bills, bgs *model.Budgets) *model.Budgets {
+	bgsm := bgs.ArrayToMap()
+	for _, b := range *bs {
+		if bg, ok := (*bgsm)[b.Budget]; ok {
+			bg.Real += b.Money
+			(*bgsm)[b.Budget] = bg
+		}
+	}
+	return bgsm.MapToArray()
+}
