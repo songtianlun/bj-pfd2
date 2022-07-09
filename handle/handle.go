@@ -171,7 +171,10 @@ func TestCode() {
 	bgs = *StatisticBillsWithBudget(&bs, &bgs)
 	bgs.StatisticRemain()
 
+	w := bs.Waterfall()
+
 	fmt.Println(abs.GenerateReport())
 	fmt.Println(ias.GenerateReport())
 	fmt.Println(bgs.GenerateReport())
+	fmt.Println(w.GenerateReport())
 }

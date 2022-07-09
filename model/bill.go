@@ -1,5 +1,7 @@
 package model
 
+import "fmt"
+
 type Bills []Bill
 type Bill struct {
 	PID     string
@@ -12,6 +14,23 @@ type Bill struct {
 	Account string
 	Budget  string
 	Type    string
+}
+
+func (bs *Bills) Waterfall() *Waterfall {
+	w := &Waterfall{
+		Year:  make(map[int64]float64),
+		Month: make(map[string]float64),
+		Day:   make(map[string]float64),
+	}
+	for _, b := range *bs {
+		month := fmt.Sprintf("%d-%d", b.Year, b.Month)
+		day := fmt.Sprintf("%d-%d-%d", b.Year, b.Month, b.Day)
+		w.Year[b.Year] += b.Money
+		w.Month[month] += b.Money
+		w.Day[day] += b.Money
+
+	}
+	return w
 }
 
 func (nb *NotionBody) ParseBill() (bills Bills) {
