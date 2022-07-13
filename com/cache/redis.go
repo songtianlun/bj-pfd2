@@ -47,6 +47,9 @@ func InitClient(c *CfgRedis) (err error) {
 //}
 
 func Get(key string) string {
+	if key == "" {
+		return ""
+	}
 	value, err := rdb.Get(key).Result()
 	if err != nil {
 		return ""
@@ -56,5 +59,8 @@ func Get(key string) string {
 }
 
 func Set(key string, value string) error {
+	if value == "" || key == "" {
+		return nil
+	}
 	return rdb.Set(key, value, 10*time.Minute).Err()
 }

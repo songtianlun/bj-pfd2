@@ -1,0 +1,33 @@
+{{ define "layout" }}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MinePin</title>
+    <!--    bootstrap v3.2.0-->
+    <script href="//staticfile-cdn.frytea.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//staticfile-cdn.frytea.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+
+    <!--    font awesome v4.2.0-->
+    <link href="//staticfile-cdn.frytea.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"/>
+
+    <link href="/static/css/login.css" rel="stylesheet">
+
+    <!--    // 通用处理方法-->
+    <script type="text/javascript" src="/static/js/handle.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      
+      {{ template "content" . }}
+      
+    </div> <!-- /container -->
+    
+    <script src="//staticfile-cdn.frytea.com/jquery/2.1.1/jquery.min.js"></script>
+  </body>
+</html>
+
+{{ end }}

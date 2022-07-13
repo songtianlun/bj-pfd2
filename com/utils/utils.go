@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bytes"
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func PathExists(path string) (bool, error) {
@@ -66,11 +68,16 @@ func P(a ...interface{}) {
 }
 
 func PrettyPrint(v interface{}) {
-	b, err := json.MarshalIndent(v, "", "  ")
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	fmt.Println(string(b))
+	bs, _ := json.Marshal(v)
+	var out bytes.Buffer
+	json.Indent(&out, bs, "", "\t")
+	fmt.Printf("%v\n", out.String())
+}
+
+func PrettyJsonString(s string) string {
+	var out bytes.Buffer
+	json.Indent(&out, []byte(s), "", "\t")
+	return out.String()
 }
 
 func IntToString(i int) string {
@@ -79,6 +86,10 @@ func IntToString(i int) string {
 
 func Int32ToString(i int32) string {
 	return strconv.Itoa(int(i))
+}
+
+func Int64ToString(i int64) string {
+	return strconv.FormatInt(i, 10)
 }
 
 // ErrorMessage Convenience function to redirect to the error message page
@@ -110,6 +121,24 @@ func ParseTemplateFiles(filenames ...string) (t *template.Template) {
 		files = append(files, fmt.Sprintf("templates/%s.html", file))
 	}
 	t = template.Must(t.ParseFiles(files...))
+	return
+}
+
+func EnDateWithYM(year int64, month int64) (code string) {
+	if year <= 1000 || year >= 10000 {
+		year = int64(time.Now().Year())
+	}
+	if month <= 0 || month > 12 {
+		month = int64(time.Now().Month())
+	}
+
+	code += Int64ToString(year)
+	code += "-"
+	if month < 10 {
+		code += "0"
+	}
+
+	code += Int64ToString(month)
 	return
 }
 

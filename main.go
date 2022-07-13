@@ -15,7 +15,7 @@ func main() {
 	}
 	initCfg()
 	initLog()
-	initDB()
+	//initDB() // 本应用设计脱离数据库
 	initCacheDB()
 	initHandle()
 

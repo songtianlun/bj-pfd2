@@ -1,6 +1,9 @@
 package model
 
-import "encoding/json"
+import (
+	"bj-pfd2/model/Notion"
+	"encoding/json"
+)
 
 func ParseNotionBody(body string) (NotionBody, error) {
 	var nbp NotionBody
@@ -27,47 +30,47 @@ type NotionBody struct {
 }
 
 type Result struct {
-	Archived       bool        `json:"archived"`
-	Cover          interface{} `json:"cover"`
-	CreatedBy      TedBy       `json:"created_by"`
-	CreatedTime    string      `json:"created_time"`
-	Icon           interface{} `json:"icon"`
-	ID             string      `json:"id"`
-	LastEditedBy   TedBy       `json:"last_edited_by"`
-	LastEditedTime string      `json:"last_edited_time"`
-	Object         string      `json:"object"`
-	Parent         Parent      `json:"parent"`
-	Properties     Properties  `json:"properties"`
-	URL            string      `json:"url"`
+	Archived       bool          `json:"archived"`
+	Cover          interface{}   `json:"cover"`
+	CreatedBy      Notion.TedBy  `json:"created_by"`
+	CreatedTime    string        `json:"created_time"`
+	Icon           interface{}   `json:"icon"`
+	ID             string        `json:"id"`
+	LastEditedBy   Notion.TedBy  `json:"last_edited_by"`
+	LastEditedTime string        `json:"last_edited_time"`
+	Object         string        `json:"object"`
+	Parent         Notion.Parent `json:"parent"`
+	Properties     Properties    `json:"properties,omitempty"`
+	URL            string        `json:"url"`
 }
 
 type Properties struct {
 	CreatedTime    CreatedTime    `json:"Created time"`
-	Day            Day            `json:"Day"`
-	DayOfWeek      Day            `json:"DayOfWeek"`
 	LastEditedTime LastEditedTime `json:"Last edited time"`
-	Month          Day            `json:"Month"`
-	Week           Week           `json:"Week"`
-	Year           Day            `json:"Year"`
-	IsTrans        IsTrans        `json:"isTrans"`
-	Name           PName          `json:"名称"`
-	Note           PName          `json:"备注"`
-	Money          PNumber        `json:"数额"`
+	Day            Day            `json:"Day,omitempty"`
+	DayOfWeek      Day            `json:"DayOfWeek,omitempty"`
+	Month          Day            `json:"Month,omitempty"`
+	Week           Week           `json:"Week,omitempty"`
+	Year           Day            `json:"Year,omitempty"`
+	IsTrans        IsTrans        `json:"isTrans,omitempty"`
+	Name           PName          `json:"名称,omitempty"`
+	Note           PName          `json:"备注,omitempty"`
+	Money          PNumber        `json:"数额,omitempty"`
 	// for bills
-	RAccount RAccount `json:"关联账户"`
-	RBudget  RBudget  `json:"关联预算"`
+	RAccount RAccount `json:"关联账户,omitempty"`
+	RBudget  RBudget  `json:"关联预算,omitempty"`
 	// for account
-	AType AType `json:"类型"`
+	AType AType `json:"类型,omitempty"`
 	// for investment account
-	Earn Earning `json:"收益"`
+	Earn Earning `json:"收益,omitempty"`
 	// for investment
-	Note1     PName    `json:"Note"`
-	RIAccount RAccount `json:"关联投资账户"`
-	Money1    PNumber  `json:"本金"`
+	Note1     PName    `json:"Note,omitempty"`
+	RIAccount RAccount `json:"关联投资账户,omitempty"`
+	Money1    PNumber  `json:"本金,omitempty"`
 	// for budget
-	Money2  PNumber `json:"预算"`
-	RlMoney RNumber `json:"实际花销"`
-	REMoney FNumber `json:"剩余"`
+	Money2  PNumber `json:"预算,omitempty"`
+	RlMoney RNumber `json:"实际花销,omitempty"`
+	REMoney FNumber `json:"剩余,omitempty"`
 }
 
 type AType struct {
@@ -150,16 +153,6 @@ type Title struct {
 type TiText struct {
 	Context string `json:"content"`
 	Link    string `json:"link"`
-}
-
-type TedBy struct {
-	ID     string `json:"id"`
-	Object string `json:"object"`
-}
-
-type Parent struct {
-	DatabaseID string `json:"database_id"`
-	Type       string `json:"type"`
 }
 
 type CreatedTime struct {

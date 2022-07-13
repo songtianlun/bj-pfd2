@@ -7,6 +7,8 @@ import (
 	"bj-pfd2/com/db"
 	"bj-pfd2/com/log"
 	"bj-pfd2/com/v"
+	"bj-pfd2/com/web"
+	"bj-pfd2/handle"
 	"fmt"
 )
 
@@ -19,7 +21,7 @@ func runCLI() (isCli bool) {
 
 func initCfg() {
 	// 首先完成配置项的注册
-	cfg.RegisterCfg("Port", 6009, "int64")
+	cfg.RegisterCfg("Port", 6010, "int64")
 	cfg.RegisterCfg("ReadTimeout", 10, "int64")
 	cfg.RegisterCfg("WriteTimeout", 600, "int64")
 	cfg.RegisterCfg("Static", "public", "string")
@@ -33,12 +35,6 @@ func initCfg() {
 	cfg.RegisterCfg("log.compress", false, "bool")
 	cfg.RegisterCfg("log.stdout", true, "bool")
 	cfg.RegisterCfg("log.only_stdout", false, "bool")
-	// db
-	cfg.RegisterCfg("db.type", "sqlite", "string")
-	cfg.RegisterCfg("db.addr", "./bj-pfd2.db", "string")
-	cfg.RegisterCfg("db.name", "bj-pfd2", "string")
-	cfg.RegisterCfg("db.username", "bj-pfd2", "string")
-	cfg.RegisterCfg("db.password", "bj-pfd2", "string")
 	// redis
 	cfg.RegisterCfg("redis.addr", "", "string")
 	cfg.RegisterCfg("redis.passwd", "", "string")
@@ -76,7 +72,6 @@ func initDB() {
 		Username: cfg.GetString("db.username"),
 		Passwd:   cfg.GetString("db.password"),
 	})
-
 }
 
 func initCacheDB() {
@@ -94,10 +89,10 @@ func initCacheDB() {
 
 func initHandle() {
 	// static file
-	//web.RegisterFile("/static/", cfg.GetString("Static"), true)
+	web.RegisterFile("/static/", cfg.GetString("Static"), true)
 
 	// index
-	//web.RegisterHandle("/", handle.Index)
+	web.RegisterHandle("/", handle.Index)
 
 	// error
 	//web.RegisterHandle("/err", handle.Err)

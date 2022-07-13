@@ -2,6 +2,7 @@ package rest
 
 import (
 	"bj-pfd2/com/log"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -28,6 +29,9 @@ func Client(url string, method string, body io.Reader, header http.Header) ([]by
 	respBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("%v", string(respBytes))
 	}
 	//fmt.Println("Response Info:")
 	//fmt.Println("  Error      :", err)

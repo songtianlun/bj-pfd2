@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/google/uuid v1.1.2
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0

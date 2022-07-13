@@ -103,17 +103,20 @@ func (w *Waterfall) GenerateReport() string {
 		if k == 0 {
 			continue
 		}
-		s += fmt.Sprintf("%d\t%f\n", k, w.Year[k])
+		s += fmt.Sprintf("%d: %f\n", k, w.Year[k])
 	}
 	s += "月度：\n"
 	mk := w.Month.SortKey()
 	for _, k := range mk {
-		s += fmt.Sprintf("%s\t%f\n", k, w.Month[k])
+		if w.Month[k] == 0 {
+			continue
+		}
+		s += fmt.Sprintf("%s: %f\n", k, w.Month[k])
 	}
-	s += "日度：\n"
-	dk := w.Day.SortKey()
-	for _, k := range dk {
-		s += fmt.Sprintf("%s\t%f\n", k, w.Day[k])
-	}
+	//s += "日度：\n"
+	//dk := w.Day.SortKey()
+	//for _, k := range dk {
+	//	s += fmt.Sprintf("%s\t%f\n", k, w.Day[k])
+	//}
 	return s
 }

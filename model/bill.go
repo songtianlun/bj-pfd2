@@ -1,6 +1,9 @@
 package model
 
-import "fmt"
+import (
+	"bj-pfd2/com/utils"
+	"fmt"
+)
 
 type Bills []Bill
 type Bill struct {
@@ -23,7 +26,7 @@ func (bs *Bills) Waterfall() *Waterfall {
 		Day:   make(map[string]float64),
 	}
 	for _, b := range *bs {
-		month := fmt.Sprintf("%d-%d", b.Year, b.Month)
+		month := utils.EnDateWithYM(b.Year, b.Month)
 		day := fmt.Sprintf("%d-%d-%d", b.Year, b.Month, b.Day)
 		w.Year[b.Year] += b.Money
 		w.Month[month] += b.Money

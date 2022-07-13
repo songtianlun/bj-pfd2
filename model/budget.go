@@ -1,6 +1,7 @@
 package model
 
 import (
+	"bj-pfd2/com/utils"
 	"fmt"
 	"sort"
 )
@@ -65,7 +66,7 @@ func (bgs *Budgets) GenerateReport() string {
 		if bg.Year == 0 || bg.Month == 0 {
 			continue
 		}
-		s += fmt.Sprintf("%v-%v \t %.2f \t %.2f \t %.2f \t %.2f\n", bg.Year, bg.Month, bg.Money, bg.Real, bg.Remain, bg.Real/float64(30))
+		s += fmt.Sprintf("%v \t %.2f \t %.2f \t %.2f \t %.2f\n", utils.EnDateWithYM(bg.Year, bg.Month), bg.Money, bg.Real, bg.Remain, bg.Real/float64(30))
 	}
 	return s
 }
