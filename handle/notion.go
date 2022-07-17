@@ -110,7 +110,7 @@ func GetDbId(name string, nToken string) string {
 	return searchDbIdByCache(name, nToken, false)
 }
 
-func GetNotionDbByCache(dbID string, start string, size int32, nToken string, noCache bool) (nb model.NotionBody, err error) {
+func GetNotionDbByCache(dbID string, start string, size int32, nToken string, noCache bool, debug bool) (nb model.NotionBody, err error) {
 	cache, err := postNotionByCache("/databases/"+dbID+"/query", model.NotionBodyPrams{
 		StartCursor: start,
 		PageSize:    size,
@@ -119,15 +119,25 @@ func GetNotionDbByCache(dbID string, start string, size int32, nToken string, no
 		log.Error("GetNotionDB error:", err)
 		return
 	}
-	//fmt.Println(cache)
+	if debug {
+		fmt.Println(cache)
+	}
 	nb, err = model.ParseNotionBody(cache)
 	return
 }
 
-func GetAllByNotion(aPID string, nToken string, noCache bool) (ns []model.NotionBody) {
+func GetAllByNotion(aPID string, nToken string, noCache bool, debug bool, maxItem int32) (ns []model.NotionBody) {
 	start := ""
-	for true {
-		db, err := GetNotionDbByCache(aPID, start, 100, nToken, noCache)
+	var count int32
+	var pSize int32
+	if maxItem > 0 && maxItem < 100 {
+		pSize = maxItem
+	} else {
+		pSize = 100
+	}
+	for maxItem < 0 || count*pSize < maxItem {
+		count++
+		db, err := GetNotionDbByCache(aPID, start, pSize, nToken, noCache, debug)
 		if err != nil {
 			return
 		}
@@ -142,8 +152,8 @@ func GetAllByNotion(aPID string, nToken string, noCache bool) (ns []model.Notion
 	return
 }
 
-func GetAllAccountF(aPID string, nToken string, noCache bool) (as model.Accounts) {
-	ns := GetAllByNotion(aPID, nToken, noCache)
+func GetAllAccount(aPID string, nToken string, noCache bool, debug bool, maxItem int32) (as model.Accounts) {
+	ns := GetAllByNotion(aPID, nToken, noCache, debug, maxItem)
 	for _, n := range ns {
 		as = append(as, n.ParseAccount()...)
 	}
@@ -151,8 +161,8 @@ func GetAllAccountF(aPID string, nToken string, noCache bool) (as model.Accounts
 	return
 }
 
-func GetAllBills(billsPID string, nToken string, noCache bool) (bs model.Bills) {
-	ns := GetAllByNotion(billsPID, nToken, noCache)
+func GetAllBills(billsPID string, nToken string, noCache bool, debug bool, maxItem int32) (bs model.Bills) {
+	ns := GetAllByNotion(billsPID, nToken, noCache, debug, maxItem)
 	for _, n := range ns {
 		bs = append(bs, n.ParseBill()...)
 	}
@@ -160,8 +170,8 @@ func GetAllBills(billsPID string, nToken string, noCache bool) (bs model.Bills) 
 	return
 }
 
-func GetAllInvestmentAccount(investmentAccountPID string, nToken string, noCache bool) (ias model.IAccounts) {
-	ns := GetAllByNotion(investmentAccountPID, nToken, noCache)
+func GetAllInvestmentAccount(investmentAccountPID string, nToken string, noCache bool, debug bool, maxItem int32) (ias model.IAccounts) {
+	ns := GetAllByNotion(investmentAccountPID, nToken, noCache, debug, maxItem)
 	for _, n := range ns {
 		ias = append(ias, n.ParseInvestmentAccount()...)
 	}
@@ -169,8 +179,8 @@ func GetAllInvestmentAccount(investmentAccountPID string, nToken string, noCache
 	return
 }
 
-func GetAllInvestment(investmentPID string, nToken string, noCache bool) (is model.Investments) {
-	ns := GetAllByNotion(investmentPID, nToken, noCache)
+func GetAllInvestment(investmentPID string, nToken string, noCache bool, debug bool, maxItem int32) (is model.Investments) {
+	ns := GetAllByNotion(investmentPID, nToken, noCache, debug, maxItem)
 	for _, n := range ns {
 		is = append(is, n.ParseInvestment()...)
 	}
@@ -178,8 +188,8 @@ func GetAllInvestment(investmentPID string, nToken string, noCache bool) (is mod
 	return
 }
 
-func GetAllBudget(budgetPid string, nToken string, noCache bool) (bs model.Budgets) {
-	ns := GetAllByNotion(budgetPid, nToken, noCache)
+func GetAllBudget(budgetPid string, nToken string, noCache bool, debug bool, maxItem int32) (bs model.Budgets) {
+	ns := GetAllByNotion(budgetPid, nToken, noCache, debug, maxItem)
 	for _, n := range ns {
 		bs = append(bs, n.ParseBudget()...)
 	}
@@ -198,28 +208,28 @@ func GetAllData(nToken string, noCache bool) {
 	wg.Add(5)
 	go func() {
 		aPID := GetDbId("BJPFD-账户-DB", nToken)
-		as = GetAllAccountF(aPID, nToken, noCache)
+		as = GetAllAccount(aPID, nToken, noCache, false, -1)
 		//as = GetAllAccount(aPID, nToken, true)
 		wg.Done()
 	}()
 	go func() {
 		bPID := GetDbId("BJPFD-账本-DB", nToken)
-		bs = GetAllBills(bPID, nToken, noCache)
+		bs = GetAllBills(bPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 	go func() {
 		iaPID := GetDbId("BJPFD-投资账户-DB", nToken)
-		ias = GetAllInvestmentAccount(iaPID, nToken, noCache)
+		ias = GetAllInvestmentAccount(iaPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 	go func() {
 		ibPID := GetDbId("BJPFD-投资账本-DB", nToken)
-		is = GetAllInvestment(ibPID, nToken, noCache)
+		is = GetAllInvestment(ibPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 	go func() {
 		bgPID := GetDbId("BJPFD-预算-DB", nToken)
-		bgs = GetAllBudget(bgPID, nToken, noCache)
+		bgs = GetAllBudget(bgPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 
@@ -233,10 +243,12 @@ func GetAllData(nToken string, noCache bool) {
 
 	w := bs.Waterfall()
 
-	fmt.Println(as.GenerateReport())
-	fmt.Println(ias.GenerateReport())
-	fmt.Println(bgs.GenerateReport())
+	fmt.Println()
 	fmt.Println(w.GenerateReport())
+	fmt.Println(bgs.GenerateReport())
+	fmt.Println(ias.GenerateReport())
+	fmt.Println(as.GenerateReport())
+	fmt.Println(bs.GenerateReport())
 }
 
 func TestCode() {

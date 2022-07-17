@@ -92,6 +92,10 @@ func Int64ToString(i int64) string {
 	return strconv.FormatInt(i, 10)
 }
 
+func Float64ToString(f float64) string {
+	return strconv.FormatFloat(f, 'f', -1, 64)
+}
+
 // ErrorMessage Convenience function to redirect to the error message page
 func ErrorMessage(writer http.ResponseWriter, request *http.Request, msg string) {
 	url := []string{"/err?msg=", msg}
@@ -139,6 +143,32 @@ func EnDateWithYM(year int64, month int64) (code string) {
 	}
 
 	code += Int64ToString(month)
+	return
+}
+
+func EnDateWithYMD(year int64, month int64, day int64) (code string) {
+	if year <= 1000 || year >= 10000 {
+		year = int64(time.Now().Year())
+	}
+	if month <= 0 || month > 12 {
+		month = int64(time.Now().Month())
+	}
+	if day <= 0 || day > 31 {
+		day = int64(time.Now().Day())
+	}
+
+	code += Int64ToString(year)
+	code += "-"
+	if month < 10 {
+		code += "0"
+	}
+	code += Int64ToString(month)
+	code += "-"
+	if day < 10 {
+		code += "0"
+	}
+	code += Int64ToString(day)
+
 	return
 }
 

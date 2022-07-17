@@ -57,10 +57,11 @@ type Properties struct {
 	Note           PName          `json:"备注,omitempty"`
 	Money          PNumber        `json:"数额,omitempty"`
 	// for bills
-	RAccount RAccount `json:"关联账户,omitempty"`
-	RBudget  RBudget  `json:"关联预算,omitempty"`
+	RAccount   RAccount     `json:"关联账户,omitempty"`
+	RBudget    RBudget      `json:"关联预算,omitempty"`
+	BUsageType SingleSelect `json:"用途,omitempty"`
 	// for account
-	AType AType `json:"类型,omitempty"`
+	AType SingleSelect `json:"类型,omitempty"`
 	// for investment account
 	Earn Earning `json:"收益,omitempty"`
 	// for investment
@@ -73,7 +74,7 @@ type Properties struct {
 	REMoney FNumber `json:"剩余,omitempty"`
 }
 
-type AType struct {
+type SingleSelect struct {
 	ID     string `json:"id"`
 	Select Select `json:"select"`
 	Type   string `json:"type"`
