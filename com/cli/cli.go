@@ -6,39 +6,56 @@ import (
 )
 
 type CLI struct {
-	abbr   string
-	dft    interface{}
-	desc   string
-	value  *bool
-	handle HandleCLI
+	Abbr   string      // 缩写
+	Dft    interface{} // 默认值
+	Desc   string      // 描述
+	Value  *bool       // 值
+	Handle HandleCLI
 }
 
 var MapCLI = make(map[string]*CLI)
 
 type HandleCLI func()
 
-func RegisterCLI(k string, abbr string, desc string, handle HandleCLI) {
+func RegisterCLI(k string, cfg *CLI) {
 	_, ok := MapCLI[k]
 	if ok {
 		panic(fmt.Sprintf("%s is already registered", k))
 	}
-	//var value bool
-	MapCLI[k] = &CLI{
-		abbr:   abbr,
-		dft:    false,
-		desc:   desc,
-		value:  pflag.BoolP(k, abbr, false, desc),
-		handle: handle,
-	}
+	MapCLI[k] = cfg
+}
+
+func RegisterBoolCLI(k string, abbr string, desc string, handle HandleCLI) {
+	RegisterCLI(k, &CLI{
+		Abbr:   abbr,
+		Dft:    false,
+		Desc:   desc,
+		Value:  pflag.BoolP(k, abbr, false, desc),
+		Handle: handle,
+	})
 	//flag.BoolVar(&value, k, false, desc)
+}
+
+//func RegisterStringCLI(k string, addr string, desc string, handle HandleCLI) {
+//	RegisterCLI(k, &CLI{
+//		Abbr:   "",
+//		Dft:    addr,
+//		Desc:   desc,
+//		Value:  pflag.StringP(k, "", addr, desc),
+//		Handle: handle,
+//	})
+//}
+
+func HandleBool(cli *CLI) () {
+
 }
 
 func CheckCLI() (isCli bool) {
 	pflag.Parse()
 	//flag.Parse()
 	for _, v := range MapCLI {
-		if *v.value {
-			v.handle()
+		if *v.Value {
+			v.Handle()
 			isCli = true
 			break
 		}

@@ -13,7 +13,7 @@ import (
 )
 
 func runCLI() (isCli bool) {
-	cli.RegisterCLI("version", "V", "show version info.", func() {
+	cli.RegisterBoolCLI("version", "V", "show version info.", func() {
 		fmt.Println(v.GetVersionStr())
 	})
 	return cli.CheckCLI()
@@ -24,7 +24,6 @@ func initCfg() {
 	cfg.RegisterCfg("Port", 6010, "int64")
 	cfg.RegisterCfg("ReadTimeout", 10, "int64")
 	cfg.RegisterCfg("WriteTimeout", 600, "int64")
-	cfg.RegisterCfg("Static", "public", "string")
 	cfg.RegisterCfg("SessionTimeoutHour", 6, "int64")
 	// log
 	cfg.RegisterCfg("log.level", "info", "string")
@@ -89,19 +88,17 @@ func initCacheDB() {
 
 func initHandle() {
 	// static file
-	web.RegisterFile("/static/", cfg.GetString("Static"), true)
+	web.RegisterFile("/static/", "public", true)
 
 	// index
-	web.RegisterHandle("/", handle.Index)
+	web.RegisterHandle("/", handle.Index, handle.Auth)
 
 	// error
-	//web.RegisterHandle("/err", handle.Err)
+	web.RegisterHandle("/err", handle.Err)
 
 	// defined in route_auth.go
-	//web.RegisterHandle("/login", handle.Login)
-	//web.RegisterHandle("/signup", handle.Signup)
-	//web.RegisterHandle("/signup_account", handle.SignupAccount)
-	//web.RegisterHandle("/authenticate", handle.Authenticate)
+	web.RegisterHandle("/login", handle.Login)
+	web.RegisterHandle("/authenticate", handle.Authenticate)
 	//
-	//web.RegisterHandle("/logout", handle.Logout)
+	web.RegisterHandle("/logout", handle.Logout)
 }

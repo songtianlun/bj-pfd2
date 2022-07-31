@@ -217,6 +217,9 @@ func (bs *Bills) GenerateReport() string {
 		}
 		if b.Year != 0 && b.Month != 0 {
 			k := utils.EnDateWithYM(b.Year, b.Month)
+			if b.UsageType == "" {
+				b.UsageType = "未分类"
+			}
 			if _, ok := BMonthMap[k]; !ok {
 				BMonthMap[k] = MonthSpend{
 					Month:    k,
