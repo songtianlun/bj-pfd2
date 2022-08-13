@@ -60,7 +60,7 @@ func (bgs *Budgets) Swap(i, j int) {
 func (bgs *Budgets) GenerateReport() string {
 	var s string
 	sort.Sort(bgs)
-	s += "预算报告：\n"
+	s += "===== 预算报告 =====\n"
 	s += "年-月 \t 预算 \t 实际 \t 剩余 \t 日均\n"
 	for _, bg := range *bgs {
 		if bg.Year == 0 || bg.Month == 0 {

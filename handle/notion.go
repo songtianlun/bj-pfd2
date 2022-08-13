@@ -256,3 +256,7 @@ func TestCode() {
 
 	GetAllData(notionToken, false)
 }
+
+func ReportWithToken(token string) {
+	GetAllData(token, false)
+}

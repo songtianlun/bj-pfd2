@@ -37,7 +37,7 @@ func (as *Accounts) ArrayToMap() *AccountMap {
 func (as *Accounts) GenerateReport() string {
 	var s string
 	sort.Sort(as)
-	s += "账户报告：\n"
+	s += "===== 账户报告 =====\n"
 	//s += "账户\t账户余额\t投资总额\n"
 	var cas float64 // 信用账户总额
 	var sas float64 // 储蓄账户总额

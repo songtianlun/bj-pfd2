@@ -4,7 +4,6 @@ import (
 	"bj-pfd2/com/cache"
 	"bj-pfd2/com/cfg"
 	"bj-pfd2/com/cli"
-	"bj-pfd2/com/db"
 	"bj-pfd2/com/log"
 	"bj-pfd2/com/v"
 	"bj-pfd2/com/web"
@@ -13,8 +12,11 @@ import (
 )
 
 func runCLI() (isCli bool) {
-	cli.RegisterBoolCLI("version", "V", "show version info.", func() {
+	cli.RegisterBoolCLI("version", "V", "show version info.", func(mapCli cli.MapCli) {
 		fmt.Println(v.GetVersionStr())
+	})
+	cli.RegisterStringCLI("token", "T", "", "Get Report With Notion Token.", func(mapCli cli.MapCli) {
+		handle.ReportWithToken(*mapCli["token"].SValue)
 	})
 	return cli.CheckCLI()
 }
@@ -35,7 +37,7 @@ func initCfg() {
 	cfg.RegisterCfg("log.stdout", true, "bool")
 	cfg.RegisterCfg("log.only_stdout", false, "bool")
 	// redis
-	cfg.RegisterCfg("redis.addr", "", "string")
+	cfg.RegisterCfg("redis.addr", "127.0.0.1:6379", "string")
 	cfg.RegisterCfg("redis.passwd", "", "string")
 	cfg.RegisterCfg("redis.db", 0, "int")
 	// bjpfd
@@ -61,16 +63,6 @@ func initLog() {
 		cfg.GetInt("log.max_file_num"),
 		cfg.GetInt("log.max_file_day"),
 		cfg.GetBool("log.compress"))
-}
-
-func initDB() {
-	db.InitDB(&db.CfgDb{
-		Typ:      cfg.GetString("db.type"),
-		Addr:     cfg.GetString("db.addr"),
-		Name:     cfg.GetString("db.name"),
-		Username: cfg.GetString("db.username"),
-		Passwd:   cfg.GetString("db.password"),
-	})
 }
 
 func initCacheDB() {

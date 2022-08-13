@@ -1,5 +1,40 @@
+.col-md-4 {
+    margin: 0;
+    padding: 0;
+}
+
 .part {
     padding: 10px;
     box-shadow: rgb(10 9 9 / 10%) 0px 0px 5px;
     border-radius: 5px;
+    margin: 10px 0;
+}
+
+p {
+    margin: 0 5px;
+}
+
+.blockGroup {
+    margin: 10px 0;
+}
+
+.block {
+    box-shadow: rgb(10 9 9 / 10%) 0px 0px 5px;
+    border-radius: 5px;
+    margin: 10px 5px;
+    padding: 5px 0;
+}
+
+.bjpfd-statistic-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: rgba(153,153,153,1);
+    margin: 0;
+}
+
+.bjpfd-statistic-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: rgba(102,102,102,1);
+    margin: 0;
 }

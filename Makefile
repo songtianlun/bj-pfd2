@@ -9,7 +9,7 @@ buildDate = $(shell TZ=Asia/Shanghai date +%FT%T%z)
 gitCommit = $(shell git log --pretty=format:'%H' -n 1)
 gitTreeState = $(shell if git status|grep -q -E 'clean|干净';then echo clean; else echo dirty; fi)
 
-ldflags=" -linkmode external -extldflags '-static' -s -w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${buildDate} -X ${versionDir}.gitCommit=${gitCommit} -X ${versionDir}.gitTreeState=${gitTreeState}"
+ldflags="  -extldflags '-static' -s -w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${buildDate} -X ${versionDir}.gitCommit=${gitCommit} -X ${versionDir}.gitTreeState=${gitTreeState}"
 
 all: gotool
 	@go build -a -v -ldflags ${ldflags} -o app .

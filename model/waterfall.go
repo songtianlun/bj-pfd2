@@ -96,7 +96,8 @@ func (wd *WDay) SortKey() []string {
 
 func (w *Waterfall) GenerateReport() string {
 	var s string
-	s += "资产瀑布统计\n"
+
+	s += "===== 资产瀑布统计 =====\n"
 	s += "年度：\n"
 	yk := w.Year.SortKey()
 	for _, k := range yk {

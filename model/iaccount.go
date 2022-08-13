@@ -49,7 +49,7 @@ func (ias *IAccounts) Less(i, j int) bool {
 func (ias *IAccounts) GenerateReport() string {
 	var s string
 	sort.Sort(ias)
-	s += "投资账户报告：\n"
+	s += "===== 投资账户报告 =====\n"
 	//s += "账户名称\t账户余额\t收益\n"
 	for _, a := range *ias {
 		s += fmt.Sprintf("%s: %.2f (%.2f)\n", a.Name, a.Money, a.Earning)
