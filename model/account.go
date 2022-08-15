@@ -1,6 +1,7 @@
 package model
 
 import (
+	"bj-pfd2/com/utils"
 	"fmt"
 	"sort"
 )
@@ -34,24 +35,15 @@ func (as *Accounts) ArrayToMap() *AccountMap {
 	return &asm
 }
 
-func (as *Accounts) GenerateReport() string {
-	var s string
+// GenerateReport
+// rep - 报告内容
+// sas - 储蓄账户总额
+// cas - 信用账户总额
+// im - 投资总额
+func (as *Accounts) GenerateReport() (rep string, sas float64, cas float64, im float64) {
 	sort.Sort(as)
-	s += "===== 账户报告 =====\n"
-	//s += "账户\t账户余额\t投资总额\n"
-	var cas float64 // 信用账户总额
-	var sas float64 // 储蓄账户总额
-	var im float64  // 投资总额
+	rep += "===== 账户报告 =====\n"
 	for _, a := range *as {
-		//if a.Name == "信用账户合计" {
-		//	cas = a.Money
-		//	continue
-		//} else if a.Name == "储蓄账户合计" {
-		//	s += fmt.Sprintf("%s:\t%.2f (%.2f)\n", "账户合计", a.Money, cas)
-		//	continue
-		//} else if a.Name == "总计" {
-		//	continue
-		//}
 		im += a.IMoney
 		sas += a.IEarning
 		if a.Type == "信用账户" {
@@ -59,10 +51,11 @@ func (as *Accounts) GenerateReport() string {
 		} else {
 			sas += a.Money
 		}
-		s += fmt.Sprintf("%s:%.2f (投资：%.2f)\n", a.Name, a.Money+a.IEarning, a.IMoney)
+		rep += fmt.Sprintf("%s:%s (投资：%s)\n", a.Name,
+			utils.PrintRMB(a.Money+a.IEarning), utils.PrintRMB(a.IMoney))
 	}
-	s += fmt.Sprintf("%s: %.2f (%.2f)\n", "账户合计", sas, cas)
-	return s
+	rep += fmt.Sprintf("%s: %s (%s)\n", "账户合计", utils.PrintRMB(sas), utils.PrintRMB(cas))
+	return
 }
 
 func (as *Accounts) Len() int {

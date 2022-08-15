@@ -60,13 +60,18 @@ func (bgs *Budgets) Swap(i, j int) {
 func (bgs *Budgets) GenerateReport() string {
 	var s string
 	sort.Sort(bgs)
-	s += "===== 预算报告 =====\n"
 	s += "年-月 \t 预算 \t 实际 \t 剩余 \t 日均\n"
 	for _, bg := range *bgs {
 		if bg.Year == 0 || bg.Month == 0 {
 			continue
 		}
-		s += fmt.Sprintf("%v \t %.2f \t %.2f \t %.2f \t %.2f\n", utils.EnDateWithYM(bg.Year, bg.Month), bg.Money, bg.Real, bg.Remain, bg.Real/float64(30))
+		s += fmt.Sprintf(
+			"%v \t %s \t %s \t %s \t %s\n",
+			utils.EnDateWithYM(bg.Year, bg.Month),
+			utils.PrintRMB(bg.Money),
+			utils.PrintRMB(bg.Real),
+			utils.PrintRMB(bg.Remain),
+			utils.PrintRMB(bg.Real/float64(30)))
 	}
 	return s
 }

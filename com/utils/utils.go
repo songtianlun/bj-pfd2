@@ -172,6 +172,10 @@ func EnDateWithYMD(year int64, month int64, day int64) (code string) {
 	return
 }
 
+func PrintRMB(rmb float64) string {
+	return fmt.Sprintf(" %.2f ¥", rmb)
+}
+
 //func GenerateHTML(writer web.ResponseWriter, data interface{}, filenames ...string) {
 //	var files []string
 //	for _, file := range filenames {

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"bj-pfd2/com/utils"
 	"fmt"
 	"sort"
 )
@@ -46,15 +47,20 @@ func (ias *IAccounts) Less(i, j int) bool {
 	return (*ias)[i].Money < (*ias)[j].Money
 }
 
-func (ias *IAccounts) GenerateReport() string {
-	var s string
+// GenerateReport
+// rep - 报告
+// tis - 投资总额
+// tes - 收益总额
+func (ias *IAccounts) GenerateReport() (rep string, tis float64, tes float64) {
 	sort.Sort(ias)
-	s += "===== 投资账户报告 =====\n"
 	//s += "账户名称\t账户余额\t收益\n"
 	for _, a := range *ias {
-		s += fmt.Sprintf("%s: %.2f (%.2f)\n", a.Name, a.Money, a.Earning)
+		rep += fmt.Sprintf("%s: %s (%s)\n", a.Name, utils.PrintRMB(a.Money), utils.PrintRMB(a.Earning))
+		tis += a.Money
+		tes += a.Earning
 	}
-	return s
+	rep += fmt.Sprintf("%s: %s (+ %s)\n", "账户合计", utils.PrintRMB(tis), utils.PrintRMB(tes))
+	return
 }
 
 func (nb *NotionBody) ParseInvestmentAccount() (iAccounts IAccounts) {

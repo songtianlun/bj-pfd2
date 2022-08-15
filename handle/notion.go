@@ -2,7 +2,6 @@ package handle
 
 import (
 	cache2 "bj-pfd2/com/cache"
-	"bj-pfd2/com/cfg"
 	"bj-pfd2/com/log"
 	"bj-pfd2/com/rest"
 	"bj-pfd2/model"
@@ -197,66 +196,41 @@ func GetAllBudget(budgetPid string, nToken string, noCache bool, debug bool, max
 	return
 }
 
-func GetAllData(nToken string, noCache bool) {
+func GetAllData(nToken string, noCache bool) (fd model.FullData) {
 	wg := sync.WaitGroup{}
-	var as model.Accounts
-	var bs model.Bills
-	var ias model.IAccounts
-	var is model.Investments
-	var bgs model.Budgets
 
 	wg.Add(5)
 	go func() {
 		aPID := GetDbId("BJPFD-账户-DB", nToken)
-		as = GetAllAccount(aPID, nToken, noCache, false, -1)
-		//as = GetAllAccount(aPID, nToken, true)
+		fd.Accounts = GetAllAccount(aPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 	go func() {
 		bPID := GetDbId("BJPFD-账本-DB", nToken)
-		bs = GetAllBills(bPID, nToken, noCache, false, -1)
+		fd.Bills = GetAllBills(bPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 	go func() {
 		iaPID := GetDbId("BJPFD-投资账户-DB", nToken)
-		ias = GetAllInvestmentAccount(iaPID, nToken, noCache, false, -1)
+		fd.IAccounts = GetAllInvestmentAccount(iaPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 	go func() {
 		ibPID := GetDbId("BJPFD-投资账本-DB", nToken)
-		is = GetAllInvestment(ibPID, nToken, noCache, false, -1)
+		fd.Investments = GetAllInvestment(ibPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 	go func() {
 		bgPID := GetDbId("BJPFD-预算-DB", nToken)
-		bgs = GetAllBudget(bgPID, nToken, noCache, false, -1)
+		fd.Budgets = GetAllBudget(bgPID, nToken, noCache, false, -1)
 		wg.Done()
 	}()
 
 	wg.Wait()
-
-	as = *StatisticSpend(&as, bs)
-	ias = *StatisticInvestment(&ias, &is)
-	as = *StatisticAccountWithIAccount(&as, &ias)
-	bgs = *StatisticBillsWithBudget(&bs, &bgs)
-	bgs.StatisticRemain()
-
-	w := bs.Waterfall()
-
-	fmt.Println()
-	fmt.Println(w.GenerateReport())
-	fmt.Println(bgs.GenerateReport())
-	fmt.Println(ias.GenerateReport())
-	fmt.Println(as.GenerateReport())
-	fmt.Println(bs.GenerateReport())
-}
-
-func TestCode() {
-	notionToken := cfg.GetString("bjpfd.notion_token")
-
-	GetAllData(notionToken, false)
+	return
 }
 
 func ReportWithToken(token string) {
-	GetAllData(token, false)
+	fd := GetAllData(token, false)
+	fd.Report()
 }

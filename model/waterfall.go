@@ -97,14 +97,13 @@ func (wd *WDay) SortKey() []string {
 func (w *Waterfall) GenerateReport() string {
 	var s string
 
-	s += "===== 资产瀑布统计 =====\n"
 	s += "年度：\n"
 	yk := w.Year.SortKey()
 	for _, k := range yk {
 		if k == 0 {
 			continue
 		}
-		s += fmt.Sprintf("%d: %f\n", k, w.Year[k])
+		s += fmt.Sprintf("%d: %s\n", k, utils.PrintRMB(w.Year[k]))
 	}
 	s += "月度：\n"
 	mk := w.Month.SortKey()
@@ -112,7 +111,7 @@ func (w *Waterfall) GenerateReport() string {
 		if w.Month[k] == 0 {
 			continue
 		}
-		s += fmt.Sprintf("%s: %f\n", k, w.Month[k])
+		s += fmt.Sprintf("%s: %s\n", k, utils.PrintRMB(w.Month[k]))
 	}
 
 	//s += "日度：\n"

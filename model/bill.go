@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"time"
 )
 
 type Bills []Bill
@@ -36,6 +37,22 @@ func (bs *Bills) Len() int {
 }
 func (bs *Bills) Swap(i, j int) {
 	(*bs)[i], (*bs)[j] = (*bs)[j], (*bs)[i]
+}
+
+func IsFunctionBillsType(bType string) (pass bool) {
+	switch bType {
+	case "转移", "还信用卡":
+		pass = true
+	case "个人储蓄", "工资", "兼职", "其他":
+		pass = false
+	default:
+		pass = false
+	}
+	return
+}
+
+func (b *Bill) isFunctionType() bool {
+	return IsFunctionBillsType(b.UsageType)
 }
 
 func (bs *Bills) Waterfall() *Waterfall {
@@ -123,7 +140,7 @@ func (ts *TypeSpends) GenerateReport() (rep string) {
 	sort.Sort(ts)
 	for _, t := range *ts {
 		if t.Spend < 0 {
-			rep += fmt.Sprintf("%s: %.2f\n", t.Type, t.Spend)
+			rep += fmt.Sprintf("%s: %s\n", t.Type, utils.PrintRMB(t.Spend))
 		}
 	}
 	return
@@ -179,7 +196,7 @@ func (ms *MonthSpends) Swap(i, j int) {
 func (ms *MonthSpends) GenerateReport() (rep string) {
 	sort.Sort(ms)
 	for _, m := range *ms {
-		rep += fmt.Sprintf("===>%s: %.2f\n", m.Month, m.Spend)
+		rep += fmt.Sprintf("===>%s: %s\n", m.Month, utils.PrintRMB(m.Spend))
 		array := m.TypesMap.ToArray()
 		rep += array.GenerateReport()
 	}
@@ -187,19 +204,40 @@ func (ms *MonthSpends) GenerateReport() (rep string) {
 }
 
 // GenerateReport 花销统计
-func (bs *Bills) GenerateReport() string {
-	var s string
+func (bs *Bills) GenerateReport() (rep string,
+	sumSpend float64, sumIncome float64,
+	sumYearSpend float64, sumYearIncome float64,
+	sumMonthSpend float64, sumMonthIncome float64) {
 	sort.Sort(bs) // 根据日期排序
 	var BTypes = TypeSpends{}
 	var BMonths = MonthSpends{}
 	//var BMonth map[string]float64
 	//var BDay map[string]float64
-
-	s += "===== 消费统计 =====\n"
+	cYear, cMonth, _ := time.Now().Date()
 
 	BTypesMap := BTypes.ToMap()
 	BMonthMap := BMonths.ToMap()
 	for _, b := range *bs {
+		if !b.isFunctionType() {
+			if b.Money <= 0 {
+				sumSpend += b.Money
+				if int(b.Year) == cYear {
+					sumYearSpend += b.Money
+				}
+				if int(b.Month) == int(cMonth) {
+					sumMonthSpend += b.Money
+				}
+			} else {
+				sumIncome += b.Money
+				if int(b.Year) == cYear {
+					sumYearIncome += b.Money
+				}
+				if int(b.Month) == int(cMonth) {
+					sumMonthIncome += b.Money
+				}
+			}
+		}
+
 		if b.Trace {
 			continue
 		}
@@ -248,9 +286,9 @@ func (bs *Bills) GenerateReport() string {
 	BTypes = BTypesMap.ToArray()
 	BMonths = BMonthMap.ToArray()
 
-	s += "== 消费分类 ==\n"
-	s += BTypes.GenerateReport()
-	s += "== 消费分月 ==\n"
-	s += BMonths.GenerateReport()
-	return s
+	rep += "== 消费分类 ==\n"
+	rep += BTypes.GenerateReport()
+	rep += "== 消费分月 ==\n"
+	rep += BMonths.GenerateReport()
+	return
 }
