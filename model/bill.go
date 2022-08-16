@@ -43,8 +43,6 @@ func IsFunctionBillsType(bType string) (pass bool) {
 	switch bType {
 	case "转移", "还信用卡":
 		pass = true
-	case "个人储蓄", "工资", "兼职", "其他":
-		pass = false
 	default:
 		pass = false
 	}
@@ -223,17 +221,17 @@ func (bs *Bills) GenerateReport() (rep string,
 				sumSpend += b.Money
 				if int(b.Year) == cYear {
 					sumYearSpend += b.Money
-				}
-				if int(b.Month) == int(cMonth) {
-					sumMonthSpend += b.Money
+					if int(b.Month) == int(cMonth) {
+						sumMonthSpend += b.Money
+					}
 				}
 			} else {
 				sumIncome += b.Money
 				if int(b.Year) == cYear {
 					sumYearIncome += b.Money
-				}
-				if int(b.Month) == int(cMonth) {
-					sumMonthIncome += b.Money
+					if int(b.Month) == int(cMonth) {
+						sumMonthIncome += b.Money
+					}
 				}
 			}
 		}
