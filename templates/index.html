@@ -13,28 +13,28 @@
 <div class="row blockGroup">
     <div class="col-md-4 col-sm-6"><div class="block">
         <p class="text-center bjpfd-statistic-title">资产总额</p>
-        <p class="text-center bjpfd-statistic-value">¥ 30000(-122)</p>
+        <p class="text-center bjpfd-statistic-value">¥ {{ .SumMoneyStr }} ({{ .SumCreditStr }})</p>
     </div></div>
     <div class="col-md-4 col-sm-6"><div class="block">
         <p class="text-center bjpfd-statistic-title">投资总额</p>
-        <p class="text-center bjpfd-statistic-value">¥ 10000</p>
+        <p class="text-center bjpfd-statistic-value">¥ {{ .SumInvestmentStr }}</p>
     </div></div>
     <div class="col-md-4 col-sm-6"><div class="block">
         <p class="text-center bjpfd-statistic-title">收益总额</p>
-        <p class="text-center bjpfd-statistic-value">¥ +455</p>
+        <p class="text-center bjpfd-statistic-value">¥ {{ .SumInvestmentIncomeStr }}</p>
     </div></div>
 
     <div class="col-md-4 col-sm-6"><div class="block">
         <p class="text-center bjpfd-statistic-title">收支状况</p>
-        <p class="text-center bjpfd-statistic-value">¥ +12000/-1222</p>
+        <p class="text-center bjpfd-statistic-value">¥ {{.SumBillsIncomeStr}} / {{.SumBillsSpendStr}}</p>
     </div></div>
     <div class="col-md-4 col-sm-6"><div class="block">
         <p class="text-center bjpfd-statistic-title">本年收支</p>
-        <p class="text-center bjpfd-statistic-value">¥ +12000/-1222</p>
+        <p class="text-center bjpfd-statistic-value">¥ {{.SumThisYearIncomeStr}} / {{.SumThisYearSpendStr}}</p>
     </div></div>
     <div class="col-md-4 col-sm-6"><div class="block">
         <p class="text-center bjpfd-statistic-title">本月收支</p>
-        <p class="text-center bjpfd-statistic-value">¥ +1200/-122</p>
+        <p class="text-center bjpfd-statistic-value">¥ {{.SumThisMonthIncomeStr}} / {{.SumThisMonthSpendStr}}</p>
     </div></div>
 </div>
 

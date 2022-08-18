@@ -176,6 +176,10 @@ func PrintRMB(rmb float64) string {
 	return fmt.Sprintf(" %.2f ¥", rmb)
 }
 
+func Float64ToRMB(f float64) string {
+	return fmt.Sprintf("%.0f", f)
+}
+
 //func GenerateHTML(writer web.ResponseWriter, data interface{}, filenames ...string) {
 //	var files []string
 //	for _, file := range filenames {

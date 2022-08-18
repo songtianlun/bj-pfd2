@@ -6,16 +6,28 @@ import (
 )
 
 type FullData struct {
-	SumMoney            float64 // 资产总额
-	SumCredit           float64 // 信用总额
-	SumInvestment       float64 // 投资总额
-	SumInvestmentIncome float64 // 投资收益总额
-	SumBillsSpend       float64 // 账单支出总额
-	SumBillsIncome      float64 // 账单收入总额
-	SumThisYearSpend    float64 // 本年支出总额
-	SumThisYearIncome   float64 // 本年收入总额
-	SumThisMonthSpend   float64 // 本月支出总额
-	SumThisMonthIncome  float64 // 本月收入总额
+	Token string
+
+	SumMoney               float64 // 资产总额
+	SumMoneyStr            string
+	SumCredit              float64 // 信用总额
+	SumCreditStr           string
+	SumInvestment          float64 // 投资总额
+	SumInvestmentStr       string
+	SumInvestmentIncome    float64 // 投资收益总额
+	SumInvestmentIncomeStr string
+	SumBillsSpend          float64 // 账单支出总额
+	SumBillsSpendStr       string
+	SumBillsIncome         float64 // 账单收入总额
+	SumBillsIncomeStr      string
+	SumThisYearSpend       float64 // 本年支出总额
+	SumThisYearSpendStr    string
+	SumThisYearIncome      float64 // 本年收入总额
+	SumThisYearIncomeStr   string
+	SumThisMonthSpend      float64 // 本月支出总额
+	SumThisMonthSpendStr   string
+	SumThisMonthIncome     float64 // 本月收入总额
+	SumThisMonthIncomeStr  string
 
 	Accounts    Accounts
 	Investments Investments
@@ -32,6 +44,19 @@ type FullData struct {
 	WaterfallReport   string
 
 	hasStatistic bool // 是否已经统计过
+}
+
+func (fd *FullData) GenerateStrRMB() {
+	fd.SumMoneyStr = utils.Float64ToRMB(fd.SumMoney)
+	fd.SumCreditStr = utils.Float64ToRMB(fd.SumCredit)
+	fd.SumInvestmentStr = utils.Float64ToRMB(fd.SumInvestment)
+	fd.SumInvestmentIncomeStr = utils.Float64ToRMB(fd.SumInvestmentIncome)
+	fd.SumBillsSpendStr = utils.Float64ToRMB(fd.SumBillsSpend)
+	fd.SumBillsIncomeStr = utils.Float64ToRMB(fd.SumBillsIncome)
+	fd.SumThisYearSpendStr = utils.Float64ToRMB(fd.SumThisYearSpend)
+	fd.SumThisYearIncomeStr = utils.Float64ToRMB(fd.SumThisYearIncome)
+	fd.SumThisMonthSpendStr = utils.Float64ToRMB(fd.SumThisMonthSpend)
+	fd.SumThisMonthIncomeStr = utils.Float64ToRMB(fd.SumThisMonthIncome)
 }
 
 func (fd *FullData) StatisticAll() {
@@ -67,6 +92,8 @@ func (fd *FullData) StatisticAll() {
 		_, fd.SumInvestmentIncome = fd.IAccounts.GenerateReport()
 	fd.BudgetsReport = fd.Budgets.GenerateReport()
 	fd.WaterfallReport = fd.Waterfall.GenerateReport()
+
+	fd.GenerateStrRMB() // Step7: 统计金额转换为人民币
 }
 
 func (fd *FullData) Report() {

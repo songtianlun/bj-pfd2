@@ -62,5 +62,5 @@ func Set(key string, value string) error {
 	if value == "" || key == "" {
 		return nil
 	}
-	return rdb.Set(key, value, 10*time.Minute).Err()
+	return rdb.Set(key, value, 30*time.Minute).Err()
 }

@@ -14,8 +14,11 @@ func Err(writer http.ResponseWriter, request *http.Request) {
 
 func Index(writer http.ResponseWriter, request *http.Request) {
 	token := model.GetToken(request)
-	indexData := model.Index{
-		Token: token,
-	}
-	web.GenerateHTML(writer, indexData, "layout", "private.navbar", "index")
+	//indexData := model.Index{
+	//	Token: token,
+	//}
+	fullData := GetAllData(token, false)
+	fullData.StatisticAll()
+	//utils.PrettyPrint(fullData)
+	web.GenerateHTML(writer, fullData, "layout", "private.navbar", "index")
 }

@@ -198,6 +198,7 @@ func GetAllBudget(budgetPid string, nToken string, noCache bool, debug bool, max
 
 func GetAllData(nToken string, noCache bool) (fd model.FullData) {
 	wg := sync.WaitGroup{}
+	fd.Token = nToken
 
 	wg.Add(5)
 	go func() {
