@@ -8,8 +8,15 @@ import (
 	"bj-pfd2/com/v"
 	"bj-pfd2/com/web"
 	"bj-pfd2/handle"
+	"embed"
 	"fmt"
 )
+
+//go:embed public
+var efsStatic embed.FS
+
+//go:embed templates
+var tplEFS embed.FS
 
 func runCLI() (isCli bool) {
 	cli.RegisterBoolCLI("version", "V", "show version info.", func(mapCli cli.MapCli) {
@@ -80,7 +87,9 @@ func initCacheDB() {
 
 func initHandle() {
 	// static file
-	web.RegisterFile("/static/", "public", true)
+	//web.RegisterDir("/static/", "public", true)
+	web.RegisterEmbedFs("/static/", &efsStatic, true)
+	web.RegisterTplEmbedFs(&tplEFS)
 
 	// index
 	web.RegisterHandle("/", handle.Index, handle.Auth)

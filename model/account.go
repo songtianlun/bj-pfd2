@@ -14,6 +14,7 @@ type Account struct {
 	Money    float64
 	IMoney   float64 // Investment money
 	IEarning float64 // Investment earning
+	RMoney   float64 // Remaining money = Money - IMoney + IEarning
 	Type     string
 }
 
@@ -51,8 +52,8 @@ func (as *Accounts) GenerateReport() (rep string, sas float64, cas float64, im f
 		} else {
 			sas += a.Money
 		}
-		rep += fmt.Sprintf("%s:%s (投资：%s)\n", a.Name,
-			utils.PrintRMB(a.Money+a.IEarning), utils.PrintRMB(a.IMoney))
+		rep += fmt.Sprintf("%s:%s (+ %s + %s)\n", a.Name,
+			utils.PrintRMB(a.RMoney), utils.PrintRMB(a.IMoney), utils.PrintRMB(a.IEarning))
 	}
 	rep += fmt.Sprintf("%s: %s (%s)\n", "账户合计", utils.PrintRMB(sas), utils.PrintRMB(cas))
 	return

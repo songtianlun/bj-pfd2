@@ -3,6 +3,7 @@ package web
 import (
 	"bj-pfd2/com/cfg"
 	"bj-pfd2/com/log"
+	"embed"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -14,6 +15,7 @@ type Chain struct {
 }
 
 var mux *http.ServeMux
+var gEfs *embed.FS
 
 // Init initializes the web server
 // 导入时自动实例化
@@ -27,12 +29,27 @@ func RegisterHandle(path string, handle http.HandlerFunc, m ...func(handlerFunc 
 	mux.HandleFunc(path, c.Then(handle))
 }
 
-func RegisterFile(path string, file string, strip bool) {
+func RegisterDir(path string, file string, strip bool) {
 	files := http.FileServer(http.Dir(file))
 	if strip {
 		mux.Handle(path, http.StripPrefix(path, files))
 	} else {
 		mux.Handle(path, files)
+	}
+}
+
+func RegisterEmbedFs(path string, efs *embed.FS, strip bool) {
+	files := http.FileServer(http.FS(efs))
+	if strip {
+		mux.Handle(path, http.StripPrefix(path, files))
+	} else {
+		mux.Handle(path, files)
+	}
+}
+
+func RegisterTplEmbedFs(efs *embed.FS) {
+	if gEfs == nil {
+		gEfs = efs
 	}
 }
 
@@ -65,7 +82,7 @@ func GenerateHTML(writer http.ResponseWriter, data interface{}, filenames ...str
 		files = append(files, fmt.Sprintf("templates/%s.html", file))
 	}
 
-	templates := template.Must(template.ParseFiles(files...))
+	templates := template.Must(template.ParseFS(gEfs, files...))
 	err := templates.ExecuteTemplate(writer, "layout", data)
 	if err != nil {
 		log.ErrorF("Generate HTML error: %v", err.Error())

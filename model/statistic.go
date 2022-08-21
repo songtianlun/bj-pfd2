@@ -5,6 +5,7 @@ func StatisticSpend(accounts *Accounts, bills Bills) *Accounts {
 	for _, bill := range bills {
 		if a, ok := (*asm)[bill.Account]; ok {
 			a.Money += bill.Money
+			a.RMoney = a.Money
 			(*asm)[bill.Account] = a
 		}
 	}
@@ -45,6 +46,7 @@ func StatisticAccountWithIAccount(as *Accounts, ias *IAccounts) *Accounts {
 		if a, ok := (*asm)[ia.RAID]; ok {
 			a.IMoney += ia.Money
 			a.IEarning += ia.Earning
+			a.RMoney = a.Money - ia.Money + ia.Earning
 			(*asm)[ia.RAID] = a
 		}
 	}
