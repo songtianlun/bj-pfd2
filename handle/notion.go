@@ -29,14 +29,14 @@ func postToNotion(nUrl string, body model.NotionBodyPrams, notionToken string) (
 }
 
 func postNotionByCache(url string, body model.NotionBodyPrams, nToken string, noCache bool) (rs string, err error) {
-	key := "notion_" + url + "_body_" + body.GetCacheKey()
+	key := fmt.Sprintf("notion_%v_body_%v_%v", url, body.GetCacheKey(), nToken)
 	rs = cache2.Get(key)
 	if rs != "" && !noCache {
 		log.InfoF("Get by Cache - %v / %v", url, body.GetJsonString())
 	} else {
 		rs, err = postToNotion(url, body, nToken)
 		if err != nil {
-			log.Error("PostToNotion error:", err)
+			err = fmt.Errorf("PostToNotion error: %v ", err)
 			return
 		}
 		go func() {
@@ -49,8 +49,8 @@ func postNotionByCache(url string, body model.NotionBodyPrams, nToken string, no
 	return
 }
 
-func searchByNotion(name string, nToken string, noCache bool) string {
-	res, err := postNotionByCache("/search", model.NotionBodyPrams{
+func searchByNotion(name string, nToken string, noCache bool) (res string, err error) {
+	res, err = postNotionByCache("/search", model.NotionBodyPrams{
 		Query: name,
 		Filter: &model.NBPFilter{
 			Value:    "database",
@@ -58,17 +58,20 @@ func searchByNotion(name string, nToken string, noCache bool) string {
 		},
 		PageSize: 100}, nToken, noCache)
 	if err != nil {
-		log.ErrorF("Error to Search By Notion - %v", err)
-		return ""
+		err = fmt.Errorf("seatchByNotion - %v ", err)
 	}
-	return res
+	return
 }
 
 func searchDBIDByNotion(name string, nToken string) (id string) {
-	res := searchByNotion(name, nToken, false)
+	res, err := searchByNotion(name, nToken, false)
+	if err != nil {
+		log.ErrorF("Err GetNDID - %v", err.Error())
+		return
+	}
 	db := &Notion.DBBody{}
 	//fmt.Println(utils.PrettyJsonString(res))
-	err := db.ParseDBBody(res)
+	err = db.ParseDBBody(res)
 	if err != nil {
 		log.Error("Parse Notion Body error:", err)
 		return
@@ -87,10 +90,10 @@ func searchDBIDByNotion(name string, nToken string) (id string) {
 }
 
 func searchDbIdByCache(name string, nToken string, noCache bool) (id string) {
-	key := "notion_db_id_" + name
+	key := fmt.Sprintf("notion_db_id_%s_%s", nToken, name)
 	id = cache2.Get(key)
 	if id != "" && !noCache {
-		log.DebugF("Search Notion DB ID [%v] by cache", key)
+		log.DebugF("Search Notion DB [%v] ID [%v] by cache", key, id)
 	} else {
 		id = searchDBIDByNotion(name, nToken)
 		if id != "" {
@@ -133,6 +136,10 @@ func GetAllByNotion(aPID string, nToken string, noCache bool, debug bool, maxIte
 		pSize = maxItem
 	} else {
 		pSize = 100
+	}
+	if aPID == "" {
+		log.ErrorF("Cannot to get all notion db with empty DB id.")
+		return
 	}
 	for maxItem < 0 || count*pSize < maxItem {
 		count++
@@ -197,33 +204,44 @@ func GetAllBudget(budgetPid string, nToken string, noCache bool, debug bool, max
 }
 
 func GetAllData(nToken string, noCache bool) (fd model.FullData) {
+	log.InfoF("Get All Data with token: %s", nToken)
 	wg := sync.WaitGroup{}
 	fd.Token = nToken
 
 	wg.Add(5)
 	go func() {
 		aPID := GetDbId("BJPFD-账户-DB", nToken)
-		fd.Accounts = GetAllAccount(aPID, nToken, noCache, false, -1)
+		if aPID != "" {
+			fd.Accounts = GetAllAccount(aPID, nToken, noCache, false, -1)
+		}
 		wg.Done()
 	}()
 	go func() {
 		bPID := GetDbId("BJPFD-账本-DB", nToken)
-		fd.Bills = GetAllBills(bPID, nToken, noCache, false, -1)
+		if bPID != "" {
+			fd.Bills = GetAllBills(bPID, nToken, noCache, false, -1)
+		}
 		wg.Done()
 	}()
 	go func() {
 		iaPID := GetDbId("BJPFD-投资账户-DB", nToken)
-		fd.IAccounts = GetAllInvestmentAccount(iaPID, nToken, noCache, false, -1)
+		if iaPID != "" {
+			fd.IAccounts = GetAllInvestmentAccount(iaPID, nToken, noCache, false, -1)
+		}
 		wg.Done()
 	}()
 	go func() {
 		ibPID := GetDbId("BJPFD-投资账本-DB", nToken)
-		fd.Investments = GetAllInvestment(ibPID, nToken, noCache, false, -1)
+		if ibPID != "" {
+			fd.Investments = GetAllInvestment(ibPID, nToken, noCache, false, -1)
+		}
 		wg.Done()
 	}()
 	go func() {
 		bgPID := GetDbId("BJPFD-预算-DB", nToken)
-		fd.Budgets = GetAllBudget(bgPID, nToken, noCache, false, -1)
+		if bgPID != "" {
+			fd.Budgets = GetAllBudget(bgPID, nToken, noCache, false, -1)
+		}
 		wg.Done()
 	}()
 

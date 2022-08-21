@@ -5,46 +5,40 @@ import (
 	"bj-pfd2/com/log"
 	"embed"
 	"fmt"
+	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"net/http"
 	"time"
 )
 
 type Chain struct {
-	middlewares []func(handler http.HandlerFunc) http.HandlerFunc
+	middlewares []func(handler httprouter.Handle) httprouter.Handle
 }
 
-var mux *http.ServeMux
+//var mux *http.ServeMux
+var router *httprouter.Router
 var gEfs *embed.FS
 
 // Init initializes the web server
 // 导入时自动实例化
 func init() {
-	mux = http.NewServeMux()
+	//mux = http.NewServeMux()
+	router = httprouter.New()
 }
 
-func RegisterHandle(path string, handle http.HandlerFunc, m ...func(handlerFunc http.HandlerFunc) http.HandlerFunc) {
+func RegisterHandle(path string, handle httprouter.Handle, m ...func(handlerFunc httprouter.Handle) httprouter.Handle) {
 	c := Chain{}
 	c.middlewares = append(c.middlewares, m...)
-	mux.HandleFunc(path, c.Then(handle))
+	//mux.HandleFunc(path, c.Then(handle))
+	(*router).GET(path, handle)
 }
 
 func RegisterDir(path string, file string, strip bool) {
-	files := http.FileServer(http.Dir(file))
-	if strip {
-		mux.Handle(path, http.StripPrefix(path, files))
-	} else {
-		mux.Handle(path, files)
-	}
+	router.ServeFiles(path, http.Dir(file))
 }
 
 func RegisterEmbedFs(path string, efs *embed.FS, strip bool) {
-	files := http.FileServer(http.FS(efs))
-	if strip {
-		mux.Handle(path, http.StripPrefix(path, files))
-	} else {
-		mux.Handle(path, files)
-	}
+	router.ServeFiles(path, http.FS(efs))
 }
 
 func RegisterTplEmbedFs(efs *embed.FS) {
@@ -53,7 +47,7 @@ func RegisterTplEmbedFs(efs *embed.FS) {
 	}
 }
 
-func (c Chain) Then(next http.HandlerFunc) http.HandlerFunc {
+func (c Chain) Then(next httprouter.Handle) httprouter.Handle {
 	for i := range c.middlewares {
 		prev := c.middlewares[len(c.middlewares)-1-i]
 		next = prev(next)
@@ -64,7 +58,7 @@ func (c Chain) Then(next http.HandlerFunc) http.HandlerFunc {
 func Run(address string) {
 	server := &http.Server{
 		Addr:           address,
-		Handler:        mux,
+		Handler:        router,
 		ReadTimeout:    time.Duration(cfg.GetInt64("ReadTimeout") * int64(time.Second)),
 		WriteTimeout:   time.Duration(cfg.GetInt64("WriteTimeout") * int64(time.Second)),
 		MaxHeaderBytes: 1 << 20,
@@ -87,4 +81,14 @@ func GenerateHTML(writer http.ResponseWriter, data interface{}, filenames ...str
 	if err != nil {
 		log.ErrorF("Generate HTML error: %v", err.Error())
 	}
+}
+
+func ParseTemplateFiles(filenames ...string) (t *template.Template) {
+	var files []string
+	t = template.New("layout")
+	for _, file := range filenames {
+		files = append(files, fmt.Sprintf("templates/%s.html", file))
+	}
+	t = template.Must(t.ParseFS(gEfs, files...))
+	return
 }

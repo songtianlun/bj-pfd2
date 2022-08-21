@@ -1,6 +1,7 @@
 package model
 
 import (
+	"bj-pfd2/com/log"
 	"fmt"
 	"net/http"
 )
@@ -8,12 +9,14 @@ import (
 func CheckToken(request *http.Request) (token string, err error) {
 	cookie, err := request.Cookie("_cookie")
 	if err != nil {
-		return "", err
+		log.ErrorF("Check Token fails - %v", err.Error())
+		return
 	}
 	token = cookie.Value
 	if token == "" {
-		return "", fmt.Errorf("token is empty")
+		err = fmt.Errorf("token is empty")
 	}
+	log.ErrorF("Check Token Pass with [%v]", token)
 	return
 }
 

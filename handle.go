@@ -88,7 +88,7 @@ func initCacheDB() {
 func initHandle() {
 	// static file
 	//web.RegisterDir("/static/", "public", true)
-	web.RegisterEmbedFs("/static/", &efsStatic, true)
+	web.RegisterEmbedFs("/static/*filepath", &efsStatic, true)
 	web.RegisterTplEmbedFs(&tplEFS)
 
 	// index

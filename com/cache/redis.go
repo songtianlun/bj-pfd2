@@ -62,5 +62,6 @@ func Set(key string, value string) error {
 	if value == "" || key == "" {
 		return nil
 	}
+	log.InfoF("Set [%s] in cache", key)
 	return rdb.Set(key, value, 30*time.Minute).Err()
 }
