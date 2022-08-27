@@ -5,6 +5,8 @@ import (
 	"fmt"
 )
 
+type ChartData map[string]float64
+
 type FullData struct {
 	Token string
 
@@ -28,6 +30,29 @@ type FullData struct {
 	SumThisMonthSpendStr   string
 	SumThisMonthIncome     float64 // 本月收入总额
 	SumThisMonthIncomeStr  string
+
+	OverviewType ChartData // 账单支出类型概况
+	Overview     ChartData // 账户概况
+
+	WaterfallYearAll      ChartData // 流水年度报表-总额
+	WaterfallYearAdd      ChartData // 流水年度报表-增量
+	WaterfallYearSubtract ChartData // 流水年度报表-减量
+
+	WaterfallMonthAll      ChartData // 流水月度报表-总额
+	WaterfallMonthAdd      ChartData // 流水月度报表-增量
+	WaterfallMonthSubtract ChartData // 流水月度报表-减量
+
+	WaterfallDayAll      ChartData // 流水日报表-总额
+	WaterfallDayAdd      ChartData // 流水日报表-增量
+	WaterfallDaySubtract ChartData // 流水日报表-减量
+
+	SpendYear   ChartData // 支出年度报表
+	SpendMonth  ChartData // 支出月度报表
+	BudgetMonth ChartData // 预算月度报表
+	SpendDay    ChartData // 支出日报表
+
+	InvestmentYear  ChartData // 投资年度报表
+	InvestmentMonth ChartData // 投资月度报表
 
 	Accounts    Accounts
 	Investments Investments
@@ -94,6 +119,60 @@ func (fd *FullData) StatisticAll() {
 	fd.WaterfallReport = fd.Waterfall.GenerateReport()
 
 	fd.GenerateStrRMB() // Step7: 统计金额转换为人民币
+	fd.GenerateChartData()
+
+	fd.Report()
+	//fd.ShowChartData()
+
+	fmt.Println(fd.Accounts.GenerateReport())
+}
+
+func (fd *FullData) GenerateChartData() {
+	fd.Overview = make(ChartData)
+	fd.OverviewType = make(ChartData)
+
+	// 遍历账户清单统计储蓄账户总额
+	for _, a := range fd.Accounts {
+		if a.Name == "" {
+			continue
+		}
+		if _, ok := fd.Overview[a.Name]; !ok {
+			fd.Overview[a.Name] = 0
+		}
+		fd.Overview[a.Name] += a.RMoney
+
+		if a.Type == "" {
+			a.Type = "储蓄账户"
+		}
+
+		if _, ok := fd.OverviewType[a.Type]; !ok {
+			fd.OverviewType[a.Type] = 0
+		}
+		fd.OverviewType[a.Type] += a.RMoney
+	}
+	// 遍历投资清单统计投资总额
+	for _, i := range fd.IAccounts {
+		if i.Name == "" {
+			continue
+		}
+		if _, ok := fd.Overview[i.Name]; !ok {
+			fd.Overview[i.Name] = 0
+		}
+		fd.Overview[i.Name] += i.Money + i.Earning // 利息仅统计到投资账户
+
+		if _, ok := fd.OverviewType[i.Type]; !ok {
+			fd.OverviewType[i.Type] = 0
+		}
+		fd.OverviewType[i.Type] += i.Money + i.Earning
+	}
+}
+
+func (fd *FullData) ShowChartData() {
+	fmt.Println("====> Overview:")
+	utils.PrettyPrint(fd.Overview)
+
+	fmt.Println("====> OverviewType:")
+	utils.PrettyPrint(fd.OverviewType)
 }
 
 func (fd *FullData) Report() {

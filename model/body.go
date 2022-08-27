@@ -1,7 +1,7 @@
 package model
 
 import (
-	"bj-pfd2/model/Notion"
+	"bj-pfd2/model/notion"
 	"encoding/json"
 )
 
@@ -32,14 +32,14 @@ type NotionBody struct {
 type Result struct {
 	Archived       bool          `json:"archived"`
 	Cover          interface{}   `json:"cover"`
-	CreatedBy      Notion.TedBy  `json:"created_by"`
+	CreatedBy      notion.TedBy  `json:"created_by"`
 	CreatedTime    string        `json:"created_time"`
 	Icon           interface{}   `json:"icon"`
 	ID             string        `json:"id"`
-	LastEditedBy   Notion.TedBy  `json:"last_edited_by"`
+	LastEditedBy   notion.TedBy  `json:"last_edited_by"`
 	LastEditedTime string        `json:"last_edited_time"`
 	Object         string        `json:"object"`
-	Parent         Notion.Parent `json:"parent"`
+	Parent         notion.Parent `json:"parent"`
 	Properties     Properties    `json:"properties,omitempty"`
 	URL            string        `json:"url"`
 }
@@ -62,9 +62,9 @@ type Properties struct {
 	BUsageType SingleSelect `json:"用途,omitempty"`
 	// for account
 	AType SingleSelect `json:"类型,omitempty"`
-	// for investment account
+	// for Investment account
 	Earn Earning `json:"收益,omitempty"`
-	// for investment
+	// for Investment
 	Note1     PName    `json:"Note,omitempty"`
 	RIAccount RAccount `json:"关联投资账户,omitempty"`
 	Money1    PNumber  `json:"本金,omitempty"`

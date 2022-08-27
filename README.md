@@ -18,16 +18,16 @@
     - ~~本年收支~~
     - ~~本月收支~~
 - 收支状况 `->` 
-  - 资产总况/分布
+  - 资产总况/分布(ChartOverview)
   - 收支统计
-    - 资产瀑布统计（按年）
-    - 资产瀑布统计（按月）
-    - 资产瀑布统计（按日）
+    - 资产瀑布统计（按年）ChartWaterfallYear
+    - 资产瀑布统计（按月）ChartWaterfallMonth
+    - 资产瀑布统计（按日）ChartWaterfallDay
   - 消费统计
-    - 消费趋势统计（按年/分类） 
-    - 消费趋势统计（按日/分类）
+    - 消费趋势统计（按年/分类）ChartSpendYear
+    - 消费趋势统计（按日/分类）ChartSpendDay
 - 收支状况 + 预算状况
-  - 预算消费趋势对比（按月）
+  - 预算消费趋势对比（按月）ChartSpendMonth
 - 投资状况
-  - 投资趋势统计（按年）
-  - 投资趋势统计（按月）
+  - 投资趋势统计（按年）ChartInvestYear
+  - 投资趋势统计（按月）ChartInvestMonth

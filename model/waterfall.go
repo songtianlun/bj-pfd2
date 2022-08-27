@@ -37,8 +37,8 @@ func (wm *WMonth) SortKey() []string {
 	var keys []string
 	for k := range *wm {
 		ks := strings.Split(k, "-")
-		if utils.StrToInt64(ks[0]) == 0 ||
-			utils.StrToInt64(ks[1]) == 0 {
+		if utils.StrToUInt64(ks[0]) == 0 ||
+			utils.StrToUInt64(ks[1]) == 0 {
 			continue // 过滤掉0字段
 		}
 		keys = append(keys, k)
@@ -46,10 +46,10 @@ func (wm *WMonth) SortKey() []string {
 	sort.Slice(keys, func(i, j int) bool {
 		ki := strings.Split(keys[i], "-")
 		kj := strings.Split(keys[j], "-")
-		yi := utils.StrToInt64(ki[0])
-		yj := utils.StrToInt64(kj[0])
-		mi := utils.StrToInt64(ki[1])
-		mj := utils.StrToInt64(kj[1])
+		yi := utils.StrToUInt64(ki[0])
+		yj := utils.StrToUInt64(kj[0])
+		mi := utils.StrToUInt64(ki[1])
+		mj := utils.StrToUInt64(kj[1])
 		if yi != yj {
 			return yi < yj
 		} else {
@@ -65,9 +65,9 @@ func (wd *WDay) SortKey() []string {
 	var keys []string
 	for k := range *wd {
 		ks := strings.Split(k, "-")
-		if utils.StrToInt64(ks[0]) == 0 ||
-			utils.StrToInt64(ks[1]) == 0 ||
-			utils.StrToInt64(ks[2]) == 0 {
+		if utils.StrToUInt64(ks[0]) == 0 ||
+			utils.StrToUInt64(ks[1]) == 0 ||
+			utils.StrToUInt64(ks[2]) == 0 {
 			continue // 过滤掉0字段
 		}
 		keys = append(keys, k)
@@ -75,12 +75,12 @@ func (wd *WDay) SortKey() []string {
 	sort.Slice(keys, func(i, j int) bool {
 		ki := strings.Split(keys[i], "-")
 		kj := strings.Split(keys[j], "-")
-		yi := utils.StrToInt64(ki[0])
-		yj := utils.StrToInt64(kj[0])
-		mi := utils.StrToInt64(ki[1])
-		mj := utils.StrToInt64(kj[1])
-		di := utils.StrToInt64(ki[2])
-		dj := utils.StrToInt64(kj[2])
+		yi := utils.StrToUInt64(ki[0])
+		yj := utils.StrToUInt64(kj[0])
+		mi := utils.StrToUInt64(ki[1])
+		mj := utils.StrToUInt64(kj[1])
+		di := utils.StrToUInt64(ki[2])
+		dj := utils.StrToUInt64(kj[2])
 		if yi != yj {
 			return yi < yj
 		} else {

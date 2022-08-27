@@ -23,7 +23,7 @@ func PathExists(path string) (bool, error) {
 	return false, err
 }
 
-func StrToInt64(s string) (i uint64) {
+func StrToUInt64(s string) (i uint64) {
 	i, err := strconv.ParseUint(s, 10, 64)
 	if err != nil {
 		i = 0
@@ -63,7 +63,7 @@ func InterfaceToSlice(i interface{}) []interface{} {
 }
 
 func P(a ...interface{}) {
-	fmt.Println(a)
+	fmt.Println(a...)
 }
 
 func PrettyPrint(v interface{}) {

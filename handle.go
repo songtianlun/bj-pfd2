@@ -92,14 +92,14 @@ func initHandle() {
 	web.RegisterTplEmbedFs(&tplEFS)
 
 	// index
-	web.RegisterHandle("/", handle.Index, handle.Auth)
+	web.RegisterHandle("get", "/", handle.Index, handle.Auth)
 
 	// error
-	web.RegisterHandle("/err", handle.Err)
+	web.RegisterHandle("get", "/err", handle.Err)
 
 	// defined in route_auth.go
-	web.RegisterHandle("/login", handle.Login)
-	web.RegisterHandle("/authenticate", handle.Authenticate)
+	web.RegisterHandle("get", "/login", handle.Login)
+	web.RegisterHandle("post", "/authenticate", handle.Authenticate)
 	//
-	web.RegisterHandle("/logout", handle.Logout)
+	web.RegisterHandle("get", "/logout", handle.Logout)
 }

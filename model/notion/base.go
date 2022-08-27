@@ -1,4 +1,4 @@
-package Notion
+package notion
 
 type Base struct {
 	HasMore    bool   `json:"has_more"`

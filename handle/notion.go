@@ -5,7 +5,7 @@ import (
 	"bj-pfd2/com/log"
 	"bj-pfd2/com/rest"
 	"bj-pfd2/model"
-	"bj-pfd2/model/Notion"
+	"bj-pfd2/model/notion"
 	"fmt"
 	"net/http"
 	"strings"
@@ -69,7 +69,7 @@ func searchDBIDByNotion(name string, nToken string) (id string) {
 		log.ErrorF("Err GetNDID - %v", err.Error())
 		return
 	}
-	db := &Notion.DBBody{}
+	db := &notion.DBBody{}
 	//fmt.Println(utils.PrettyJsonString(res))
 	err = db.ParseDBBody(res)
 	if err != nil {

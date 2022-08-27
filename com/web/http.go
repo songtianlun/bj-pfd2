@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+type Middleware func(httprouter.Handle) httprouter.Handle
+
 type Chain struct {
 	middlewares []func(handler httprouter.Handle) httprouter.Handle
 }
@@ -26,11 +28,16 @@ func init() {
 	router = httprouter.New()
 }
 
-func RegisterHandle(path string, handle httprouter.Handle, m ...func(handlerFunc httprouter.Handle) httprouter.Handle) {
+func RegisterHandle(method string, path string, handle httprouter.Handle, m ...func(handlerFunc httprouter.Handle) httprouter.Handle) {
 	c := Chain{}
 	c.middlewares = append(c.middlewares, m...)
 	//mux.HandleFunc(path, c.Then(handle))
-	(*router).GET(path, handle)
+	//(*router).GET(path, handle)
+	if method == "post" {
+		(*router).POST(path, c.Then(handle))
+	} else {
+		(*router).GET(path, c.Then(handle))
+	}
 }
 
 func RegisterDir(path string, file string, strip bool) {

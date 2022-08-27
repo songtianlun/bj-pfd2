@@ -1,7 +1,7 @@
 package model
 
-type Investments []investment
-type investment struct {
+type Investments []Investment
+type Investment struct {
 	PID     string
 	Name    string
 	Money   float64
@@ -18,7 +18,7 @@ func (nb *NotionBody) ParseInvestment() (is Investments) {
 	for i := 0; i < len(res); i++ {
 		re := res[i]
 		//utils.PrettyPrint(re)
-		b := investment{
+		b := Investment{
 			PID:     re.ID,
 			Money:   re.Properties.Money1.Number,
 			Year:    re.Properties.Year.Formula.Number,

@@ -195,14 +195,24 @@
                 data: [0, 1700, 1400, 1200, 300, 0]
             },
             {
-                name: 'Life Cost',
+                name: '增量',
+                type: 'bar',
+                stack: 'Total',
+                label: {
+                    show: true,
+                    position: 'top'
+                },
+                data: [2900, 0, 0, 0, 0, 0]
+            },
+            {
+                name: '减量',
                 type: 'bar',
                 stack: 'Total',
                 label: {
                     show: true,
                     position: 'inside'
                 },
-                data: [2900, 1200, 300, 200, 900, 300]
+                data: [0, 1200, 300, 200, 900, 300]
             }
         ]
     })

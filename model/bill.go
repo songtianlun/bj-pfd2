@@ -178,10 +178,10 @@ func (ms *MonthSpends) Len() int {
 func (ms *MonthSpends) Less(i, j int) bool {
 	ki := strings.Split((*ms)[i].Month, "-")
 	kj := strings.Split((*ms)[j].Month, "-")
-	yi := utils.StrToInt64(ki[0])
-	yj := utils.StrToInt64(kj[0])
-	mi := utils.StrToInt64(ki[1])
-	mj := utils.StrToInt64(kj[1])
+	yi := utils.StrToUInt64(ki[0])
+	yj := utils.StrToUInt64(kj[0])
+	mi := utils.StrToUInt64(ki[1])
+	mj := utils.StrToUInt64(kj[1])
 	if yi != yj {
 		return yi < yj
 	} else {

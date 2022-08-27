@@ -14,6 +14,7 @@ type IAccount struct {
 	Name    string
 	Money   float64
 	Earning float64
+	RMoney  float64
 	Type    string
 }
 
@@ -33,6 +34,20 @@ func (iam *IAccountMap) MapToArray() *IAccounts {
 		accounts = append(accounts, v)
 	}
 	return &accounts
+}
+
+func (ias *IAccounts) Compare(ias2 *IAccounts) bool {
+	if len(*ias) != len(*ias2) {
+		return false
+	}
+	iam := ias.ArrayToMap()
+	iam2 := ias2.ArrayToMap()
+	for k, v := range *iam {
+		if v != (*iam2)[k] {
+			return false
+		}
+	}
+	return true
 }
 
 func (ias *IAccounts) Len() int {

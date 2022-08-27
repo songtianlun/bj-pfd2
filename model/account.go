@@ -36,6 +36,20 @@ func (as *Accounts) ArrayToMap() *AccountMap {
 	return &asm
 }
 
+func (as *Accounts) Compare(as2 *Accounts) bool {
+	if len(*as) != len(*as2) {
+		return false
+	}
+	asm := as.ArrayToMap()
+	asm2 := as2.ArrayToMap()
+	for k, v := range *asm {
+		if v != (*asm2)[k] {
+			return false
+		}
+	}
+	return true
+}
+
 // GenerateReport
 // rep - 报告内容
 // sas - 储蓄账户总额
