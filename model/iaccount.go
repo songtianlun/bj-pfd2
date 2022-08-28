@@ -70,7 +70,7 @@ func (ias *IAccounts) GenerateReport() (rep string, tis float64, tes float64) {
 	sort.Sort(ias)
 	//s += "账户名称\t账户余额\t收益\n"
 	for _, a := range *ias {
-		rep += fmt.Sprintf("%s: %s (%s)\n", a.Name, utils.PrintRMB(a.Money), utils.PrintRMB(a.Earning))
+		rep += fmt.Sprintf("%s: %s (%s)\n", a.Name, utils.PrintRMB(a.RMoney), utils.PrintRMB(a.Earning))
 		tis += a.Money
 		tes += a.Earning
 	}

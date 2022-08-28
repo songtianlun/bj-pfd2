@@ -25,9 +25,10 @@
     - 资产瀑布统计（按日）ChartWaterfallDay
   - 消费统计
     - 消费趋势统计（按年/分类）ChartSpendYear
+    - 消费趋势统计（按月/分类）ChartSpendMonth
     - 消费趋势统计（按日/分类）ChartSpendDay
 - 收支状况 + 预算状况
-  - 预算消费趋势对比（按月）ChartSpendMonth
+  - 预算消费趋势对比（按月）ChartSpendMonthWithBudget
 - 投资状况
   - 投资趋势统计（按年）ChartInvestYear
   - 投资趋势统计（按月）ChartInvestMonth

@@ -21,9 +21,6 @@ func StatisticSpend(accounts *Accounts, bills Bills) *Accounts {
 func StatisticInvestment(ias *IAccounts, is *Investments) *IAccounts {
 	iam := ias.ArrayToMap()
 	for _, iv := range *is {
-		//all := (*iam)["all"]
-		//all.Money += iv.Money
-		//(*iam)["all"] = all
 		if a, ok := (*iam)[iv.Account]; ok {
 			a.Money += iv.Money
 			(*iam)[iv.Account] = a
@@ -33,13 +30,6 @@ func StatisticInvestment(ias *IAccounts, is *Investments) *IAccounts {
 		v.RMoney = v.Money + v.Earning
 		(*iam)[k] = v
 	}
-	//for k, ia := range *iam {
-	//	if k != "all" {
-	//		all := (*iam)["all"]
-	//		all.Earning += ia.Earning
-	//		(*iam)["all"] = all
-	//	}
-	//}
 	return iam.MapToArray()
 }
 
@@ -49,6 +39,7 @@ func StatisticAccountWithIAccount(as *Accounts, ias *IAccounts) *Accounts {
 		if a, ok := (*asm)[ia.RAID]; ok {
 			a.IMoney += ia.RMoney
 			a.IEarning += ia.Earning
+			a.Money += ia.Earning
 			(*asm)[ia.RAID] = a
 		} else {
 			log.DebugF("StatisticAccountWithIAccount: %s[%s] not found", ia.Name, ia.RAID)

@@ -122,9 +122,9 @@ func (fd *FullData) StatisticAll() {
 	fd.GenerateChartData()
 
 	fd.Report()
-	//fd.ShowChartData()
+	fd.ShowChartData()
 
-	fmt.Println(fd.Accounts.GenerateReport())
+	//fmt.Println(fd.Accounts.GenerateReport())
 }
 
 func (fd *FullData) GenerateChartData() {
@@ -136,10 +136,11 @@ func (fd *FullData) GenerateChartData() {
 		if a.Name == "" {
 			continue
 		}
-		if _, ok := fd.Overview[a.Name]; !ok {
-			fd.Overview[a.Name] = 0
+		kn := fmt.Sprintf("(%s)%s", a.Type, a.Name)
+		if _, ok := fd.Overview[kn]; !ok {
+			fd.Overview[kn] = 0
 		}
-		fd.Overview[a.Name] += a.RMoney
+		fd.Overview[kn] += a.RMoney
 
 		if a.Type == "" {
 			a.Type = "储蓄账户"
@@ -155,10 +156,11 @@ func (fd *FullData) GenerateChartData() {
 		if i.Name == "" {
 			continue
 		}
-		if _, ok := fd.Overview[i.Name]; !ok {
-			fd.Overview[i.Name] = 0
+		kn := fmt.Sprintf("(%s)%s", i.Type, i.Name)
+		if _, ok := fd.Overview[kn]; !ok {
+			fd.Overview[kn] = 0
 		}
-		fd.Overview[i.Name] += i.Money + i.Earning // 利息仅统计到投资账户
+		fd.Overview[kn] += i.Money + i.Earning // 利息仅统计到投资账户
 
 		if _, ok := fd.OverviewType[i.Type]; !ok {
 			fd.OverviewType[i.Type] = 0

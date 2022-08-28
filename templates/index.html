@@ -40,20 +40,41 @@
 
 <div class="charts">
     <div class="part">
-        <div id="statistic" style="height:400px;width: 100%"></div>
+        <div id="ChartOverview" style="height:400px;width: 100%"></div>
     </div>
     <div class="part">
-        <div id="waterfall" style="height:400px;width: 100%"></div>
+        <div id="ChartWaterfallYear" style="height:400px;width: 100%"></div>
     </div>
     <div class="part">
-        <div id="budget" style="height:400px;width: 100%"></div>
+        <div id="ChartWaterfallMonth" style="height:400px;width: 100%"></div>
+    </div>
+    <div class="part">
+        <div id="ChartWaterfallDay" style="height:400px;width: 100%"></div>
+    </div>
+    <div class="part">
+        <div id="ChartSpendYear" style="height:400px;width: 100%"></div>
+    </div>
+    <div class="part">
+        <div id="ChartSpendMonth" style="height:400px;width: 100%"></div>
+    </div>
+    <div class="part">
+        <div id="ChartSpendMonthWithBudget" style="height:400px;width: 100%"></div>
+    </div>
+    <div class="part">
+        <div id="ChartSpendDay" style="height:400px;width: 100%"></div>
+    </div>
+    <div class="part">
+        <div id="ChartInvestYear" style="height:400px;width: 100%"></div>
+    </div>
+    <div class="part">
+        <div id="ChartInvestMonth" style="height:400px;width: 100%"></div>
     </div>
 </div>
 
 
 
 <script type="text/javascript">
-    handle.registerEChartsOption('statistic', {
+    handle.registerEChartsOption('ChartOverview', {
         title: {
             text: '资产总况',
             subtext: ''
@@ -148,9 +169,9 @@
         ]
     })
 
-    handle.registerEChartsOption("waterfall", {
+    handle.registerEChartsOption("ChartWaterfallYear", {
         title: {
-            text: '资产瀑布图',
+            text: '资产瀑布图（年）',
             subtext: ''
         },
         tooltip: {
@@ -217,10 +238,244 @@
         ]
     })
 
-    handle.registerEChartsOption("budget", {
+    handle.registerEChartsOption("ChartWaterfallMonth", {
+        title: {
+            text: '资产瀑布图（月）',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            formatter: function (params) {
+                var tar = params[1];
+                return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            splitLine: { show: false },
+            data: ['Total', 'Rent', 'Utilities', 'Transportation', 'Meals', 'Other']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: 'Placeholder',
+                type: 'bar',
+                stack: 'Total',
+                itemStyle: {
+                    borderColor: 'transparent',
+                    color: 'transparent'
+                },
+                emphasis: {
+                    itemStyle: {
+                        borderColor: 'transparent',
+                        color: 'transparent'
+                    }
+                },
+                data: [0, 1700, 1400, 1200, 300, 0]
+            },
+            {
+                name: '增量',
+                type: 'bar',
+                stack: 'Total',
+                label: {
+                    show: true,
+                    position: 'top'
+                },
+                data: [2900, 0, 0, 0, 0, 0]
+            },
+            {
+                name: '减量',
+                type: 'bar',
+                stack: 'Total',
+                label: {
+                    show: true,
+                    position: 'inside'
+                },
+                data: [0, 1200, 300, 200, 900, 300]
+            }
+        ]
+    })
+
+    handle.registerEChartsOption("ChartWaterfallDay", {
+        title: {
+            text: '资产瀑布图（日）',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            formatter: function (params) {
+                var tar = params[1];
+                return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            splitLine: { show: false },
+            data: ['Total', 'Rent', 'Utilities', 'Transportation', 'Meals', 'Other']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: 'Placeholder',
+                type: 'bar',
+                stack: 'Total',
+                itemStyle: {
+                    borderColor: 'transparent',
+                    color: 'transparent'
+                },
+                emphasis: {
+                    itemStyle: {
+                        borderColor: 'transparent',
+                        color: 'transparent'
+                    }
+                },
+                data: [0, 1700, 1400, 1200, 300, 0]
+            },
+            {
+                name: '增量',
+                type: 'bar',
+                stack: 'Total',
+                label: {
+                    show: true,
+                    position: 'top'
+                },
+                data: [2900, 0, 0, 0, 0, 0]
+            },
+            {
+                name: '减量',
+                type: 'bar',
+                stack: 'Total',
+                label: {
+                    show: true,
+                    position: 'inside'
+                },
+                data: [0, 1200, 300, 200, 900, 300]
+            }
+        ]
+    })
+
+    handle.registerEChartsOption("ChartSpendYear", {
+        title: {
+            text: '消费趋势统计（按年/分类）'
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: 'Email',
+                type: 'line',
+                stack: 'Total',
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: 'Union Ads',
+                type: 'line',
+                stack: 'Total',
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name: 'Video Ads',
+                type: 'line',
+                stack: 'Total',
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+                name: 'Direct',
+                type: 'line',
+                stack: 'Total',
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [320, 332, 301, 334, 390, 330, 320]
+            },
+            {
+                name: 'Search Engine',
+                type: 'line',
+                stack: 'Total',
+                label: {
+                    show: true,
+                    position: 'top'
+                },
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [820, 932, 901, 934, 1290, 1330, 1320]
+            }
+        ]
+    })
+    handle.registerEChartsOption("ChartSpendMonth", {
         color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
         title: {
-            text: '预算消费趋势'
+            text: '消费趋势统计（按月/分类）'
         },
         tooltip: {
             trigger: 'axis',
@@ -396,6 +651,164 @@
                     focus: 'series'
                 },
                 data: [220, 302, 181, 234, 210, 290, 150]
+            }
+        ]
+    })
+    handle.registerEChartsOption("ChartSpendMonthWithBudget", {
+        title: {
+            text: '预算消费趋势对比（按月）'
+        },
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                type: 'line',
+                smooth: true
+            },
+            {
+                data: [120, 32, 29, 34, 290, 130, 120],
+                type: 'line',
+                smooth: true
+            }
+        ]
+    })
+    handle.registerEChartsOption("ChartSpendDay", {
+        title: {
+            text: '消费趋势统计（按日/分类）'
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: 'Email',
+                type: 'line',
+                stack: 'Total',
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: 'Union Ads',
+                type: 'line',
+                stack: 'Total',
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name: 'Video Ads',
+                type: 'line',
+                stack: 'Total',
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+                name: 'Direct',
+                type: 'line',
+                stack: 'Total',
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [320, 332, 301, 334, 390, 330, 320]
+            },
+            {
+                name: 'Search Engine',
+                type: 'line',
+                stack: 'Total',
+                label: {
+                    show: true,
+                    position: 'top'
+                },
+                areaStyle: {},
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [820, 932, 901, 934, 1290, 1330, 1320]
+            }
+        ]
+    })
+    handle.registerEChartsOption("ChartInvestYear", {
+        title: {
+            text: '投资趋势统计（按年）'
+        },
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                type: 'line',
+                smooth: true
+            }
+        ]
+    })
+    handle.registerEChartsOption("ChartInvestMonth", {
+        title: {
+            text: '投资趋势统计（按月）'
+        },
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                type: 'line',
+                smooth: true
             }
         ]
     })
