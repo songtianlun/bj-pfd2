@@ -34,17 +34,17 @@ type FullData struct {
 	OverviewType ChartData // 账单支出类型概况
 	Overview     ChartData // 账户概况
 
-	WaterfallYearAll      ChartData // 流水年度报表-总额
-	WaterfallYearAdd      ChartData // 流水年度报表-增量
-	WaterfallYearSubtract ChartData // 流水年度报表-减量
+	WaterfallYearAll ChartData // 流水年度报表-总额
+	WaterfallYearAdd ChartData // 流水年度报表-增量
+	WaterfallYearSub ChartData // 流水年度报表-减量
 
-	WaterfallMonthAll      ChartData // 流水月度报表-总额
-	WaterfallMonthAdd      ChartData // 流水月度报表-增量
-	WaterfallMonthSubtract ChartData // 流水月度报表-减量
+	WaterfallMonthAll ChartData // 流水月度报表-总额
+	WaterfallMonthAdd ChartData // 流水月度报表-增量
+	WaterfallMonthSub ChartData // 流水月度报表-减量
 
-	WaterfallDayAll      ChartData // 流水日报表-总额
-	WaterfallDayAdd      ChartData // 流水日报表-增量
-	WaterfallDaySubtract ChartData // 流水日报表-减量
+	WaterfallDayAll ChartData // 流水日报表-总额
+	WaterfallDayAdd ChartData // 流水日报表-增量
+	WaterfallDaySub ChartData // 流水日报表-减量
 
 	SpendYear   ChartData // 支出年度报表
 	SpendMonth  ChartData // 支出月度报表
@@ -167,6 +167,60 @@ func (fd *FullData) GenerateChartData() {
 		}
 		fd.OverviewType[i.Type] += i.Money + i.Earning
 	}
+
+	// 遍历 Waterfall.Year 生成瀑布图数据
+	fd.WaterfallYearAll = make(ChartData)
+	fd.WaterfallYearAdd = make(ChartData)
+	fd.WaterfallYearSub = make(ChartData)
+	var waterfallYearAll float64
+	waterfallYearAll = 0
+	for _, k := range fd.Waterfall.Year.SortKey() {
+		if k == 0 {
+			continue
+		}
+		key := fmt.Sprintf("%d", k)
+		value := fd.Waterfall.Year[k]
+
+		waterfallYearAll += value
+
+		if fd.Waterfall.Year[k] > 0 {
+			fd.WaterfallYearAll[key] = waterfallYearAll - value
+			fd.WaterfallYearAdd[key] = value
+			fd.WaterfallYearSub[key] = 0
+		} else {
+			fd.WaterfallYearAll[key] = waterfallYearAll + value
+			fd.WaterfallYearAdd[key] = 0
+			fd.WaterfallYearSub[key] = -value
+		}
+
+	}
+
+	// 遍历 Waterfall.Month 生成瀑布图数据
+	fd.WaterfallMonthAll = make(ChartData)
+	fd.WaterfallMonthAdd = make(ChartData)
+	fd.WaterfallMonthSub = make(ChartData)
+	var waterfallMonthAll float64
+	waterfallMonthAll = 0
+	for _, k := range fd.Waterfall.Month.SortKey() {
+		key := fmt.Sprintf("%s", k)
+		value := fd.Waterfall.Month[k]
+
+		if value == 0 {
+			continue
+		}
+
+		waterfallMonthAll += value
+
+		if fd.Waterfall.Month[k] > 0 {
+			fd.WaterfallMonthAll[key] = waterfallMonthAll - value
+			fd.WaterfallMonthAdd[key] = value
+			fd.WaterfallMonthSub[key] = 0
+		} else {
+			fd.WaterfallMonthAll[key] = waterfallMonthAll + value
+			fd.WaterfallMonthAdd[key] = 0
+			fd.WaterfallMonthSub[key] = -value
+		}
+	}
 }
 
 func (fd *FullData) ShowChartData() {
@@ -175,6 +229,20 @@ func (fd *FullData) ShowChartData() {
 
 	fmt.Println("====> OverviewType:")
 	utils.PrettyPrint(fd.OverviewType)
+
+	fmt.Println("====> WaterfallYearAll:")
+	utils.PrettyPrint(fd.WaterfallYearAll)
+	fmt.Println("====> WaterfallYearAdd:")
+	utils.PrettyPrint(fd.WaterfallYearAdd)
+	fmt.Println("====> WaterfallYearSub:")
+	utils.PrettyPrint(fd.WaterfallYearSub)
+
+	fmt.Println("====> WaterfallMonthAll:")
+	utils.PrettyPrint(fd.WaterfallMonthAll)
+	fmt.Println("====> WaterfallMonthAdd:")
+	utils.PrettyPrint(fd.WaterfallMonthAdd)
+	fmt.Println("====> WaterfallMonthSub:")
+	utils.PrettyPrint(fd.WaterfallMonthSub)
 }
 
 func (fd *FullData) Report() {

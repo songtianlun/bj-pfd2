@@ -49,9 +49,6 @@
         <div id="ChartWaterfallMonth" style="height:400px;width: 100%"></div>
     </div>
     <div class="part">
-        <div id="ChartWaterfallDay" style="height:400px;width: 100%"></div>
-    </div>
-    <div class="part">
         <div id="ChartSpendYear" style="height:400px;width: 100%"></div>
     </div>
     <div class="part">
@@ -71,35 +68,39 @@
     </div>
 </div>
 
-
-
 <script type="text/javascript">
+    let ChartOverviewTypeData = []
+    let ChartOverviewData = []
+
+    {{range $key,$value := .OverviewType }}
+    ChartOverviewTypeData.push({
+        name: '{{$key}}',
+        value: {{$value}}
+    })
+    {{end}}
+    {{range $key,$value := .Overview }}
+    ChartOverviewData.push({
+        name: '{{$key}}',
+        value: {{$value}}
+    })
+    {{end}}
     handle.registerEChartsOption('ChartOverview', {
         title: {
             text: '资产总况',
-            subtext: ''
+            subtext: '',
         },
         tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        legend: {
-            data: [
-                'Direct',
-                'Marketing',
-                'Search Engine',
-                'Email',
-                'Union Ads',
-                'Video Ads',
-                'Baidu',
-                'Google',
-                'Bing',
-                'Others'
-            ]
+            formatter: '{a} <br/>{b}: {c} ({d}%)',
+            textStyle: {
+                fontWeight: 300,
+                fontSize: 10,
+                width: 4,
+            },
         },
         series: [
             {
-                name: 'Access From',
+                name: '资产总况/分类统计',
                 type: 'pie',
                 selectedMode: 'single',
                 radius: [0, '30%'],
@@ -110,14 +111,17 @@
                 labelLine: {
                     show: false
                 },
-                data: [
-                    { value: 1548, name: 'Search Engine' },
-                    { value: 775, name: 'Direct' },
-                    { value: 679, name: 'Marketing', selected: true }
-                ]
+                itemStyle: {
+                    borderRadius: 4,
+                    // borderColor: '#fff',
+                    borderWidth: 1,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                    shadowBlur: 10
+                },
+                data: ChartOverviewTypeData
             },
             {
-                name: 'Access From',
+                name: '资产总况',
                 type: 'pie',
                 radius: ['45%', '60%'],
                 labelLine: {
@@ -155,226 +159,57 @@
                         }
                     }
                 },
-                data: [
-                    { value: 1048, name: 'Baidu' },
-                    { value: 335, name: 'Direct' },
-                    { value: 310, name: 'Email' },
-                    { value: 251, name: 'Google' },
-                    { value: 234, name: 'Union Ads' },
-                    { value: 147, name: 'Bing' },
-                    { value: 135, name: 'Video Ads' },
-                    { value: 102, name: 'Others' }
-                ]
+                itemStyle: {
+                    borderRadius: 4,
+                    // borderColor: '#fff',
+                    borderWidth: 1,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                    shadowBlur: 10
+                },
+                data: ChartOverviewData
             }
         ]
     })
 
-    handle.registerEChartsOption("ChartWaterfallYear", {
-        title: {
-            text: '资产瀑布图（年）',
-            subtext: ''
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            },
-            formatter: function (params) {
-                var tar = params[1];
-                return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            splitLine: { show: false },
-            data: ['Total', 'Rent', 'Utilities', 'Transportation', 'Meals', 'Other']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                name: 'Placeholder',
-                type: 'bar',
-                stack: 'Total',
-                itemStyle: {
-                    borderColor: 'transparent',
-                    color: 'transparent'
-                },
-                emphasis: {
-                    itemStyle: {
-                        borderColor: 'transparent',
-                        color: 'transparent'
-                    }
-                },
-                data: [0, 1700, 1400, 1200, 300, 0]
-            },
-            {
-                name: '增量',
-                type: 'bar',
-                stack: 'Total',
-                label: {
-                    show: true,
-                    position: 'top'
-                },
-                data: [2900, 0, 0, 0, 0, 0]
-            },
-            {
-                name: '减量',
-                type: 'bar',
-                stack: 'Total',
-                label: {
-                    show: true,
-                    position: 'inside'
-                },
-                data: [0, 1200, 300, 200, 900, 300]
-            }
-        ]
-    })
+    let ChartWaterfallYearXAxis = []
+    let ChartWaterfallYearAll = []
+    let ChartWaterfallYearAdd = []
+    let ChartWaterfallYearSub = []
 
-    handle.registerEChartsOption("ChartWaterfallMonth", {
-        title: {
-            text: '资产瀑布图（月）',
-            subtext: ''
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            },
-            formatter: function (params) {
-                var tar = params[1];
-                return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            splitLine: { show: false },
-            data: ['Total', 'Rent', 'Utilities', 'Transportation', 'Meals', 'Other']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                name: 'Placeholder',
-                type: 'bar',
-                stack: 'Total',
-                itemStyle: {
-                    borderColor: 'transparent',
-                    color: 'transparent'
-                },
-                emphasis: {
-                    itemStyle: {
-                        borderColor: 'transparent',
-                        color: 'transparent'
-                    }
-                },
-                data: [0, 1700, 1400, 1200, 300, 0]
-            },
-            {
-                name: '增量',
-                type: 'bar',
-                stack: 'Total',
-                label: {
-                    show: true,
-                    position: 'top'
-                },
-                data: [2900, 0, 0, 0, 0, 0]
-            },
-            {
-                name: '减量',
-                type: 'bar',
-                stack: 'Total',
-                label: {
-                    show: true,
-                    position: 'inside'
-                },
-                data: [0, 1200, 300, 200, 900, 300]
-            }
-        ]
-    })
+    {{range $key,$value := .WaterfallYearAll }}
+    ChartWaterfallYearAll.push({{$value}}.toFixed(2))
+    ChartWaterfallYearXAxis.push({{$key}})
+    {{end}}
 
-    handle.registerEChartsOption("ChartWaterfallDay", {
-        title: {
-            text: '资产瀑布图（日）',
-            subtext: ''
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            },
-            formatter: function (params) {
-                var tar = params[1];
-                return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
-            }
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            splitLine: { show: false },
-            data: ['Total', 'Rent', 'Utilities', 'Transportation', 'Meals', 'Other']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                name: 'Placeholder',
-                type: 'bar',
-                stack: 'Total',
-                itemStyle: {
-                    borderColor: 'transparent',
-                    color: 'transparent'
-                },
-                emphasis: {
-                    itemStyle: {
-                        borderColor: 'transparent',
-                        color: 'transparent'
-                    }
-                },
-                data: [0, 1700, 1400, 1200, 300, 0]
-            },
-            {
-                name: '增量',
-                type: 'bar',
-                stack: 'Total',
-                label: {
-                    show: true,
-                    position: 'top'
-                },
-                data: [2900, 0, 0, 0, 0, 0]
-            },
-            {
-                name: '减量',
-                type: 'bar',
-                stack: 'Total',
-                label: {
-                    show: true,
-                    position: 'inside'
-                },
-                data: [0, 1200, 300, 200, 900, 300]
-            }
-        ]
-    })
+    {{range $value := .WaterfallYearAdd }}
+    ChartWaterfallYearAdd.push({{$value}}.toFixed(2))
+    {{end}}
+
+    {{range $value := .WaterfallYearSub }}
+    ChartWaterfallYearSub.push({{$value}}.toFixed(2))
+    {{end}}
+
+    handle.registerEchartsWaterfall("ChartWaterfallYear", "资产瀑布图（年）",
+        ChartWaterfallYearXAxis, ChartWaterfallYearAll, ChartWaterfallYearAdd, ChartWaterfallYearSub);
+
+    let ChartWaterfallMonthXAxis = []
+    let ChartWaterfallMonthAll = []
+    let ChartWaterfallMonthAdd = []
+    let ChartWaterfallMonthSub = []
+    {{range $key,$value := .WaterfallMonthAll }}
+    ChartWaterfallMonthAll.push({{$value}}.toFixed(2))
+    ChartWaterfallMonthXAxis.push({{$key}})
+    {{end}}
+    {{range $value := .WaterfallMonthAdd }}
+    ChartWaterfallMonthAdd.push({{$value}}.toFixed(2))
+    {{end}}
+    {{range $value := .WaterfallMonthSub }}
+    ChartWaterfallMonthSub.push({{$value}}.toFixed(2))
+    {{end}}
+
+    handle.registerEchartsWaterfall("ChartWaterfallMonth", "资产瀑布图（月）",
+        ChartWaterfallMonthXAxis, ChartWaterfallMonthAll, ChartWaterfallMonthAdd, ChartWaterfallMonthSub);
+
 
     handle.registerEChartsOption("ChartSpendYear", {
         title: {

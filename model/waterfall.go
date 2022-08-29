@@ -31,6 +31,13 @@ func (wy *WYear) SortKey() []int64 {
 	return keys
 }
 
+func (wy *WYear) Get(k int64) float64 {
+	if v, ok := (*wy)[k]; ok {
+		return v
+	}
+	return 0
+}
+
 type WMonth map[string]float64
 
 func (wm *WMonth) SortKey() []string {
