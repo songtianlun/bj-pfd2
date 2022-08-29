@@ -182,11 +182,21 @@
     {{end}}
 
     {{range $value := .WaterfallYearAdd }}
-    ChartWaterfallYearAdd.push({{$value}}.toFixed(2))
+    if ({{$value}} == 0) {
+        ChartWaterfallYearAdd.push('-')
+    } else {
+        ChartWaterfallYearAdd.push({{$value}}.toFixed(2))
+    }
+    // ChartWaterfallYearAdd.push({{$value}}.toFixed(2))
     {{end}}
 
     {{range $value := .WaterfallYearSub }}
-    ChartWaterfallYearSub.push({{$value}}.toFixed(2))
+    if ({{$value}} == 0) {
+        ChartWaterfallYearSub.push('-')
+    } else {
+        ChartWaterfallYearSub.push({{$value}}.toFixed(2))
+    }
+    // ChartWaterfallYearSub.push({{$value}}.toFixed(2))
     {{end}}
 
     handle.registerEchartsWaterfall("ChartWaterfallYear", "资产瀑布图（年）",
@@ -201,10 +211,18 @@
     ChartWaterfallMonthXAxis.push({{$key}})
     {{end}}
     {{range $value := .WaterfallMonthAdd }}
-    ChartWaterfallMonthAdd.push({{$value}}.toFixed(2))
+    if ({{$value}} == 0) {
+        ChartWaterfallMonthAdd.push('-')
+    } else {
+        ChartWaterfallMonthAdd.push({{$value}}.toFixed(2))
+    }
     {{end}}
     {{range $value := .WaterfallMonthSub }}
-    ChartWaterfallMonthSub.push({{$value}}.toFixed(2))
+    if ({{$value}} == 0) {
+        ChartWaterfallMonthSub.push('-')
+    } else {
+        ChartWaterfallMonthSub.push({{$value}}.toFixed(2))
+    }
     {{end}}
 
     handle.registerEchartsWaterfall("ChartWaterfallMonth", "资产瀑布图（月）",

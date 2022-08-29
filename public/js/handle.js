@@ -44,7 +44,7 @@
                     // return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value + '<br/>' +
                     //     tar2.seriesName + ' : ' + tar2.value;
                     var tar;
-                    if (params[1].value > 0) {
+                    if (params[1].value !== "-") {
                         tar = params[1];
                     }
                     else {
@@ -65,9 +65,9 @@
                 splitLine: { show: false },
                 data: xAxisData
             },
-            yAxis: [{
+            yAxis: {
                     type: 'value'
-                }],
+                },
             dataZoom: [
                 {
                     type: 'slider',
@@ -86,12 +86,12 @@
             ],
             series: [
                 {
-                    name: 'Placeholder',
+                    name: '资产总量',
                     type: 'bar',
                     stack: 'Total',
                     itemStyle: {
-                        borderColor: 'transparent',
-                        color: 'transparent'
+                        barBorderColor: 'rgba(0,0,0,0)',
+                        color: 'rgba(0,0,0,0)'
                     },
                     emphasis: {
                         itemStyle: {
