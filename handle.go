@@ -44,6 +44,7 @@ func initCfg() {
 	cfg.RegisterCfg("log.stdout", true, "bool")
 	cfg.RegisterCfg("log.only_stdout", false, "bool")
 	// redis
+	cfg.RegisterCfg("redis.enable", false, "bool")
 	cfg.RegisterCfg("redis.addr", "127.0.0.1:6379", "string")
 	cfg.RegisterCfg("redis.passwd", "", "string")
 	cfg.RegisterCfg("redis.db", 0, "int")

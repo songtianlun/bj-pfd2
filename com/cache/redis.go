@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"bj-pfd2/com/cfg"
 	"bj-pfd2/com/log"
 	"github.com/go-redis/redis"
 	"time"
@@ -50,6 +51,9 @@ func Get(key string) string {
 	if key == "" {
 		return ""
 	}
+	if !cfg.GetBool("redis.enable") {
+		return ""
+	}
 	value, err := rdb.Get(key).Result()
 	if err != nil {
 		return ""
@@ -60,6 +64,9 @@ func Get(key string) string {
 
 func Set(key string, value string) error {
 	if value == "" || key == "" {
+		return nil
+	}
+	if !cfg.GetBool("redis.enable") {
 		return nil
 	}
 	//log.InfoF("Set [%s] in cache", key)
