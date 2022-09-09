@@ -5,7 +5,6 @@ import (
 	"bj-pfd2/com/log"
 	"bj-pfd2/com/v"
 	"bj-pfd2/com/web"
-	"bj-pfd2/handle"
 	"strconv"
 )
 
@@ -24,12 +23,6 @@ func main() {
 	// Step3 - 准备web服务
 
 	initHandle()
-
-	// Debug
-	fullData := handle.GetAllData("secret_OP7h4rxVR2XE08nz0PPK4qqyGBCwDcrgXpNQgkH1EKI", false)
-	fullData.StatisticAll()
-	fullData.Report()
-	fullData.ShowChartData()
 
 	//fmt.Println(fullData.Accounts.GenerateReport())
 
