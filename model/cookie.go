@@ -16,7 +16,7 @@ func CheckToken(request *http.Request) (token string, err error) {
 	if token == "" {
 		err = fmt.Errorf("token is empty")
 	}
-	log.InfoF("Check Token Pass with [%v]", token)
+	log.InfoF("Check Token Pass")
 	return
 }
 

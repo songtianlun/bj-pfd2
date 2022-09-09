@@ -20,10 +20,17 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     make
 
 # 构建最小镜像
-FROM scratch
+#FROM scratch
+FROM alpine:latest
 
 # 从 builder 中拷贝主程序到空镜像
 COPY --from=builder /build/app /
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
+    apk update && \
+    apk upgrade && \
+    apk add --no-cache ca-certificates && \
+    update-ca-certificates
 
 # 需要运行的命令
 ENTRYPOINT ["/app"]
