@@ -25,6 +25,52 @@
         let chart = echarts.init(chartDom);
         option && chart.setOption(option);
     }
+    let registerEchartsLinesChart = function registerEchartsLinesChart(domName, showDataZoom ,chartTitle,
+                                                                       xAxisData,...dates) {
+        let option = {
+            title: {
+                text: chartTitle
+            },
+            xAxis: {
+                type: 'category',
+                data: xAxisData
+            },
+            yAxis: {
+                type: 'value'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            series: []
+        }
+        if (showDataZoom) {
+            option.dataZoom = [
+                {
+                    type: 'slider',
+                    realtime: true,
+                    start: 30,
+                    end: 100,
+                    xAxisIndex: [0]
+                },
+                {
+                    type: 'inside',
+                    realtime: true,
+                    start: 30,
+                    end: 100,
+                    xAxisIndex: [0]
+                },
+            ]
+        }
+        for (let i = 0; i < dates.length; i++) {
+            option.series.push({
+                data: dates[i],
+                type: 'line',
+                smooth: true
+            })
+        }
+
+        registerEChartsOptions(domName, option);
+    }
     let registerEchartsOverView = function registerEchartsOverView(domName, chartTitle,
                                                                    firstTitle, firstData, secondTitle,secondData) {
         let option = {
@@ -115,7 +161,8 @@
         }
         registerEChartsOptions(domName, option);
     }
-    let registerEchartsWaterfall = function registerEchartsWaterfall(domName, chartTitle, xAxisData, allData, addData, subData) {
+    let registerEchartsWaterfall = function registerEchartsWaterfall(domName, showDataZoom, chartTitle,
+                                                                     xAxisData, allData, addData, subData) {
         let option = {
             title: {
                 text: chartTitle,
@@ -127,10 +174,6 @@
                     type: 'shadow'
                 },
                 formatter: function (params) {
-                    // var tar = params[1];
-                    // let tar2 = params[2];
-                    // return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value + '<br/>' +
-                    //     tar2.seriesName + ' : ' + tar2.value;
                     var tar;
                     if (params[1].value !== "-") {
                         tar = params[1];
@@ -155,23 +198,7 @@
             },
             yAxis: {
                     type: 'value'
-                },
-            dataZoom: [
-                {
-                    type: 'slider',
-                    realtime: true,
-                    start: 30,
-                    end: 100,
-                    xAxisIndex: [0]
-                },
-                {
-                    type: 'inside',
-                    realtime: true,
-                    start: 30,
-                    end: 100,
-                    xAxisIndex: [0]
-                },
-            ],
+            },
             series: [
                 {
                     name: '资产总量',
@@ -229,6 +256,24 @@
                 }
             ]
         };
+        if (showDataZoom) {
+            option.dataZoom =  [
+                {
+                    type: 'slider',
+                    realtime: true,
+                    start: 30,
+                    end: 100,
+                    xAxisIndex: [0]
+                },
+                {
+                    type: 'inside',
+                    realtime: true,
+                    start: 30,
+                    end: 100,
+                    xAxisIndex: [0]
+                },
+            ]
+        }
         registerEChartsOptions(domName, option);
     }
 
@@ -236,5 +281,6 @@
         registerEChartsOption: registerEChartsOptions,
         registerEchartsWaterfall: registerEchartsWaterfall,
         registerEchartsOverView: registerEchartsOverView,
+        registerEchartsLinesChart: registerEchartsLinesChart,
     }
 }));

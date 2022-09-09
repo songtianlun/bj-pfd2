@@ -94,7 +94,7 @@ func ParseTemplateFiles(filenames ...string) (t *template.Template) {
 	var files []string
 	t = template.New("layout")
 	for _, file := range filenames {
-		files = append(files, fmt.Sprintf("templates/%s.html", file))
+		files = append(files, fmt.Sprintf("templates/%s.tmpl", file))
 	}
 	t = template.Must(t.ParseFS(gEfs, files...))
 	return
