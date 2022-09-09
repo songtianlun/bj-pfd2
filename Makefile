@@ -3,7 +3,7 @@ BASEDIR = $(shell pwd)
 GOPROXY=https://mirrors.cloud.tencent.com/go/
 
 # build with version infos
-versionDir = "minepin/com/v"
+versionDir = "bj-pfd2/com/v"
 gitTag = $(shell if [ "`git describe --tags --abbrev=0 2>/dev/null`" != "" ];then git describe --tags --abbrev=0; else git log --pretty=format:'%h' -n 1; fi)
 buildDate = $(shell TZ=Asia/Shanghai date +%FT%T%z)
 gitCommit = $(shell git log --pretty=format:'%H' -n 1)
@@ -15,7 +15,7 @@ all: build
 	@go build -a -v -ldflags ${ldflags} -o app .
 .PHONY: clean
 clean:
-	rm -f minegin
+	rm -f app
 	find . -name "[._]*.s[a-w][a-z]" | xargs -i rm -f {}
 .PHONY: build
 build: test
