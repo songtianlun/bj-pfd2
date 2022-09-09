@@ -9,8 +9,8 @@ buildDate = $(shell TZ=Asia/Shanghai date +%FT%T%z)
 gitCommit = $(shell git log --pretty=format:'%H' -n 1)
 gitTreeState = $(shell if git status|grep -q -E 'clean|干净';then echo clean; else echo dirty; fi)
 
-ldflags="  -extldflags '-static' -s -w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${buildDate} -X ${versionDir}.gitCommit=${gitCommit} -X ${versionDir}.gitTreeState=${gitTreeState}"
-
+ldflags=" -tags netgo -extldflags '-static' -s -w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${buildDate} -X ${versionDir}.gitCommit=${gitCommit} -X ${versionDir}.gitTreeState=${gitTreeState}"
+# -tags netgo 解决 exec user process caused: no such file or directory
 all: build
 	@go build -a -v -ldflags ${ldflags} -o app .
 .PHONY: clean
