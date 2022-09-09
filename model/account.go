@@ -26,6 +26,10 @@ func (asm *AccountMap) MapToArray() *Accounts {
 	return &accounts
 }
 
+func (as *Accounts) Sort() {
+	sort.Sort(as)
+}
+
 func (as *Accounts) ArrayToMap() *AccountMap {
 	asm := AccountMap{}
 	for _, a := range *as {

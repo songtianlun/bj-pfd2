@@ -22,7 +22,6 @@
   - 收支统计
     - 资产瀑布统计（按年）ChartWaterfallYear
     - 资产瀑布统计（按月）ChartWaterfallMonth
-    - 资产瀑布统计（按日）ChartWaterfallDay
   - 消费统计
     - 消费趋势统计（按年/分类）ChartSpendYear
     - 消费趋势统计（按月/分类）ChartSpendMonth

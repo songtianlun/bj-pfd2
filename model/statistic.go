@@ -2,9 +2,11 @@ package model
 
 import (
 	"bj-pfd2/com/log"
+	"bj-pfd2/com/utils"
+	"bj-pfd2/model/chart"
 )
 
-func StatisticSpend(accounts *Accounts, bills Bills) *Accounts {
+func StatisticBillsToAccounts(accounts *Accounts, bills Bills) *Accounts {
 	asm := accounts.ArrayToMap()
 	for _, bill := range bills {
 		if bill.Account == "" {
@@ -18,7 +20,7 @@ func StatisticSpend(accounts *Accounts, bills Bills) *Accounts {
 	return asm.MapToArray()
 }
 
-func StatisticInvestment(ias *IAccounts, is *Investments) *IAccounts {
+func StatisticInvestmentWithIAccounts(ias *IAccounts, is *Investments) *IAccounts {
 	iam := ias.ArrayToMap()
 	for _, iv := range *is {
 		if a, ok := (*iam)[iv.Account]; ok {
@@ -61,4 +63,29 @@ func StatisticBillsWithBudget(bs *Bills, bgs *Budgets) *Budgets {
 		}
 	}
 	return bgsm.MapToArray()
+}
+
+func StatisticBills(bs *Bills, wf *chart.Waterfall, sp *chart.Spend) {
+	for _, b := range *bs {
+		month := utils.EnDateWithYM(b.Year, b.Month)
+		day := utils.EnDateWithYMD(b.Year, b.Month, b.Day)
+		wf.Year[b.Year] += b.Money
+		wf.Month[month] += b.Money
+		wf.Day[day] += b.Money
+
+		if !b.IsTrace {
+			sp.Year[b.Year] += b.Money
+			sp.Month[month] += b.Money
+			sp.Day[day] += b.Money
+		}
+
+	}
+}
+
+func StatisticInvestment(ivs *Investments, is *chart.Investment) {
+	for _, iv := range *ivs {
+		month := utils.EnDateWithYM(iv.Year, iv.Month)
+		is.Year[iv.Year] += iv.Money
+		is.Month[month] += iv.Money
+	}
 }

@@ -25,9 +25,97 @@
         let chart = echarts.init(chartDom);
         option && chart.setOption(option);
     }
+    let registerEchartsOverView = function registerEchartsOverView(domName, chartTitle,
+                                                                   firstTitle, firstData, secondTitle,secondData) {
+        let option = {
+            title: {
+                text: chartTitle,
+                subtext: '',
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)',
+                textStyle: {
+                    fontWeight: 300,
+                    fontSize: 10,
+                    width: 4,
+                },
+            },
+            series: [
+                {
+                    name: firstTitle,
+                    type: 'pie',
+                    selectedMode: 'single',
+                    radius: [0, '30%'],
+                    label: {
+                        position: 'inner',
+                        fontSize: 14
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    itemStyle: {
+                        borderRadius: 4,
+                        // borderColor: '#fff',
+                        borderWidth: 1,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)',
+                        shadowBlur: 10
+                    },
+                    data: firstData
+                },
+                {
+                    name: secondTitle,
+                    type: 'pie',
+                    radius: ['45%', '60%'],
+                    labelLine: {
+                        length: 30
+                    },
+                    label: {
+                        formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                        backgroundColor: '#F6F8FC',
+                        borderColor: '#8C8D8E',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        rich: {
+                            a: {
+                                color: '#6E7079',
+                                lineHeight: 22,
+                                align: 'center'
+                            },
+                            hr: {
+                                borderColor: '#8C8D8E',
+                                width: '100%',
+                                borderWidth: 1,
+                                height: 0
+                            },
+                            b: {
+                                color: '#4C5058',
+                                fontSize: 14,
+                                fontWeight: 'bold',
+                                lineHeight: 33
+                            },
+                            per: {
+                                color: '#fff',
+                                backgroundColor: '#4C5058',
+                                padding: [3, 4],
+                                borderRadius: 4
+                            }
+                        }
+                    },
+                    itemStyle: {
+                        borderRadius: 4,
+                        // borderColor: '#fff',
+                        borderWidth: 1,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)',
+                        shadowBlur: 10
+                    },
+                    data: secondData
+                }
+            ]
+        }
+        registerEChartsOptions(domName, option);
+    }
     let registerEchartsWaterfall = function registerEchartsWaterfall(domName, chartTitle, xAxisData, allData, addData, subData) {
-        let chartDom = document.getElementById(domName);
-        let chart = echarts.init(chartDom);
         let option = {
             title: {
                 text: chartTitle,
@@ -141,11 +229,12 @@
                 }
             ]
         };
-        option && chart.setOption(option);
+        registerEChartsOptions(domName, option);
     }
 
     return {
         registerEChartsOption: registerEChartsOptions,
         registerEchartsWaterfall: registerEchartsWaterfall,
+        registerEchartsOverView: registerEchartsOverView,
     }
 }));

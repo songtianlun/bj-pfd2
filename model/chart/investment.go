@@ -1,4 +1,4 @@
-package model
+package chart
 
 import (
 	"bj-pfd2/com/utils"
@@ -7,19 +7,16 @@ import (
 	"strings"
 )
 
-// 资产瀑布统计
-
-type Waterfall struct {
+type Investment struct {
 	Year  WYear
 	Month WMonth
-	Day   WDay
 }
 
-type WYear map[int64]float64
+type IYear map[int64]float64
 
-func (wy *WYear) SortKey() []int64 {
+func (iy *IYear) SortKey() []int64 {
 	var keys []int64
-	for k := range *wy {
+	for k := range *iy {
 		if k == 0 {
 			continue // 过滤掉0字段
 		}
@@ -31,18 +28,18 @@ func (wy *WYear) SortKey() []int64 {
 	return keys
 }
 
-func (wy *WYear) Get(k int64) float64 {
-	if v, ok := (*wy)[k]; ok {
+func (iy *IYear) Get(k int64) float64 {
+	if v, ok := (*iy)[k]; ok {
 		return v
 	}
 	return 0
 }
 
-type WMonth map[string]float64
+type IMonth map[string]float64
 
-func (wm *WMonth) SortKey() []string {
+func (im *IMonth) SortKey() []string {
 	var keys []string
-	for k := range *wm {
+	for k := range *im {
 		ks := strings.Split(k, "-")
 		if utils.StrToUInt64(ks[0]) == 0 ||
 			utils.StrToUInt64(ks[1]) == 0 {
@@ -66,11 +63,11 @@ func (wm *WMonth) SortKey() []string {
 	return keys
 }
 
-type WDay map[string]float64
+type IDay map[string]float64
 
-func (wd *WDay) SortKey() []string {
+func (sd *IDay) SortKey() []string {
 	var keys []string
-	for k := range *wd {
+	for k := range *sd {
 		ks := strings.Split(k, "-")
 		if utils.StrToUInt64(ks[0]) == 0 ||
 			utils.StrToUInt64(ks[1]) == 0 ||
@@ -101,24 +98,24 @@ func (wd *WDay) SortKey() []string {
 	return keys
 }
 
-func (w *Waterfall) GenerateReport() string {
+func (sp *Investment) GenerateReport() string {
 	var s string
 
 	s += "年度：\n"
-	yk := w.Year.SortKey()
+	yk := sp.Year.SortKey()
 	for _, k := range yk {
 		if k == 0 {
 			continue
 		}
-		s += fmt.Sprintf("%d: %s\n", k, utils.PrintRMB(w.Year[k]))
+		s += fmt.Sprintf("%d: %s\n", k, utils.PrintRMB(sp.Year[k]))
 	}
 	s += "月度：\n"
-	mk := w.Month.SortKey()
+	mk := sp.Month.SortKey()
 	for _, k := range mk {
-		if w.Month[k] == 0 {
+		if sp.Month[k] == 0 {
 			continue
 		}
-		s += fmt.Sprintf("%s: %s\n", k, utils.PrintRMB(w.Month[k]))
+		s += fmt.Sprintf("%s: %s\n", k, utils.PrintRMB(sp.Month[k]))
 	}
 
 	//s += "日度：\n"

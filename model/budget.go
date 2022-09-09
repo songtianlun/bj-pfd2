@@ -35,6 +35,20 @@ func (bgs *Budgets) ArrayToMap() *BudgetsMap {
 	return &bgm
 }
 
+func (bs *Budgets) Compare(bs2 *Budgets) bool {
+	if len(*bs) != len(*bs2) {
+		return false
+	}
+	bsm := bs.ArrayToMap()
+	bsm2 := bs2.ArrayToMap()
+	for k, v := range *bsm {
+		if v != (*bsm2)[k] {
+			return false
+		}
+	}
+	return true
+}
+
 func (bgs *Budgets) StatisticRemain() {
 	for i, b := range *bgs {
 		((*bgs)[i]).Remain = b.Money + b.Real

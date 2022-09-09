@@ -2,6 +2,7 @@ package model
 
 import (
 	"bj-pfd2/com/utils"
+	"bj-pfd2/model/chart"
 	"fmt"
 )
 
@@ -42,24 +43,24 @@ type FullData struct {
 	WaterfallMonthAdd ChartData // 流水月度报表-增量
 	WaterfallMonthSub ChartData // 流水月度报表-减量
 
-	WaterfallDayAll ChartData // 流水日报表-总额
-	WaterfallDayAdd ChartData // 流水日报表-增量
-	WaterfallDaySub ChartData // 流水日报表-减量
+	BudgetMonth ChartData // 预算月度报表-预算额
+	BudgetReal  ChartData // 预算月度报表-实际额
 
-	SpendYear   ChartData // 支出年度报表
-	SpendMonth  ChartData // 支出月度报表
-	BudgetMonth ChartData // 预算月度报表
-	SpendDay    ChartData // 支出日报表
+	SpendYear  ChartData // 支出年度报表
+	SpendMonth ChartData // 支出月度报表
+	SpendDay   ChartData // 支出日报表
 
 	InvestmentYear  ChartData // 投资年度报表
 	InvestmentMonth ChartData // 投资月度报表
 
-	Accounts    Accounts
-	Investments Investments
-	Bills       Bills
-	IAccounts   IAccounts
-	Budgets     Budgets
-	Waterfall   Waterfall
+	Accounts    Accounts         // Accounts Raw Data
+	Bills       Bills            // Bills Raw Data
+	IAccounts   IAccounts        // Investment Accounts RawData
+	Investments Investments      // Investments RawData
+	Budgets     Budgets          // Budgets RawData
+	Waterfall   chart.Waterfall  // Waterfall Statistic
+	Spend       chart.Spend      // Spend Statistic
+	Investment  chart.Investment // Investment Statistic
 
 	AccountsReport    string
 	BillsReport       string
@@ -71,17 +72,32 @@ type FullData struct {
 	hasStatistic bool // 是否已经统计过
 }
 
-func (fd *FullData) GenerateStrRMB() {
-	fd.SumMoneyStr = utils.Float64ToRMB(fd.SumMoney)
-	fd.SumCreditStr = utils.Float64ToRMB(fd.SumCredit)
-	fd.SumInvestmentStr = utils.Float64ToRMB(fd.SumInvestment)
-	fd.SumInvestmentIncomeStr = utils.Float64ToRMB(fd.SumInvestmentIncome)
-	fd.SumBillsSpendStr = utils.Float64ToRMB(fd.SumBillsSpend)
-	fd.SumBillsIncomeStr = utils.Float64ToRMB(fd.SumBillsIncome)
-	fd.SumThisYearSpendStr = utils.Float64ToRMB(fd.SumThisYearSpend)
-	fd.SumThisYearIncomeStr = utils.Float64ToRMB(fd.SumThisYearIncome)
-	fd.SumThisMonthSpendStr = utils.Float64ToRMB(fd.SumThisMonthSpend)
-	fd.SumThisMonthIncomeStr = utils.Float64ToRMB(fd.SumThisMonthIncome)
+func (fd *FullData) Compare(tfd *FullData) bool {
+	if fd.Token != tfd.Token {
+		return false
+	}
+
+	if !fd.Accounts.Compare(&tfd.Accounts) {
+		return false
+	}
+
+	if !fd.IAccounts.Compare(&tfd.IAccounts) {
+		return false
+	}
+
+	if !fd.Bills.Compare(&tfd.Bills) {
+		return false
+	}
+
+	if !fd.Investments.Compare(&tfd.Investments) {
+		return false
+	}
+
+	if !fd.Budgets.Compare(&tfd.Budgets) {
+		return false
+	}
+
+	return true
 }
 
 func (fd *FullData) StatisticAll() {
@@ -89,16 +105,48 @@ func (fd *FullData) StatisticAll() {
 		return
 	}
 
-	fd.Accounts = *StatisticSpend(&fd.Accounts, fd.Bills)                    // Step1: 统计账单支出
-	fd.IAccounts = *StatisticInvestment(&fd.IAccounts, &fd.Investments)      // Step2： 然后统计投资状况
-	fd.Accounts = *StatisticAccountWithIAccount(&fd.Accounts, &fd.IAccounts) // Step3: 将投资状况统计到账户中
-	fd.Budgets = *StatisticBillsWithBudget(&fd.Bills, &fd.Budgets)           // Step4: 统计账单支出到预算中
-	fd.Budgets.StatisticRemain()                                             // Step5: 统计预算剩余金额
-	fd.Waterfall = *fd.Bills.Waterfall()                                     // Step6: 根据账单支出统计流水
+	fd.StatisticAllRawData() // Step1: 统计所有原始数据
 
-	fd.hasStatistic = true // Step7: 标记已统计
+	fd.StatisticAllChartData() // Step2: 统计所有图表数据
 
-	// Step8: 统计报表
+	fd.hasStatistic = true // Step3: 标记已经统计过
+}
+
+// StatisticAllRawData
+// 统计所有原始数据（将相关数据结合）
+func (fd *FullData) StatisticAllRawData() {
+	if fd.hasStatistic {
+		return
+	}
+	fd.Accounts = *StatisticBillsToAccounts(&fd.Accounts, fd.Bills)                  // Step1: 统计账单支出
+	fd.IAccounts = *StatisticInvestmentWithIAccounts(&fd.IAccounts, &fd.Investments) // Step2： 然后统计投资状况
+	fd.Accounts = *StatisticAccountWithIAccount(&fd.Accounts, &fd.IAccounts)         // Step3: 将投资状况统计到账户中
+	fd.Budgets = *StatisticBillsWithBudget(&fd.Bills, &fd.Budgets)                   // Step4: 统计账单支出到预算中
+	fd.Budgets.StatisticRemain()                                                     // Step5: 统计预算剩余金额
+	fd.Waterfall = chart.Waterfall{
+		Year:  make(map[int64]float64),
+		Month: make(map[string]float64),
+		Day:   make(map[string]float64),
+	}
+	fd.Spend = chart.Spend{
+		Year:  make(map[int64]float64),
+		Month: make(map[string]float64),
+		Day:   make(map[string]float64),
+	}
+	StatisticBills(&fd.Bills, &fd.Waterfall, &fd.Spend) // Step6: 统计流水和纯支出
+	fd.Investment = chart.Investment{
+		Year:  make(map[int64]float64),
+		Month: make(map[string]float64),
+	}
+	StatisticInvestment(&fd.Investments, &fd.Investment) // Step7: 统计投资
+}
+
+// StatisticAllChartData
+// 统计所有图表数据（在完成原始数据统计的基础上）
+func (fd *FullData) StatisticAllChartData() {
+	if fd.hasStatistic {
+		return
+	}
 	fd.AccountsReport,
 		fd.SumMoney,
 		fd.SumCredit,
@@ -121,10 +169,19 @@ func (fd *FullData) StatisticAll() {
 	fd.GenerateStrRMB() // Step7: 统计金额转换为人民币
 	fd.GenerateChartData()
 
-	fd.Report()
-	fd.ShowChartData()
+}
 
-	//fmt.Println(fd.Accounts.GenerateReport())
+func (fd *FullData) GenerateStrRMB() {
+	fd.SumMoneyStr = utils.Float64ToIntStrRMB(fd.SumMoney)
+	fd.SumCreditStr = utils.Float64ToIntStrRMB(fd.SumCredit)
+	fd.SumInvestmentStr = utils.Float64ToIntStrRMB(fd.SumInvestment)
+	fd.SumInvestmentIncomeStr = utils.Float64ToIntStrRMB(fd.SumInvestmentIncome)
+	fd.SumBillsSpendStr = utils.Float64ToIntStrRMB(fd.SumBillsSpend)
+	fd.SumBillsIncomeStr = utils.Float64ToIntStrRMB(fd.SumBillsIncome)
+	fd.SumThisYearSpendStr = utils.Float64ToIntStrRMB(fd.SumThisYearSpend)
+	fd.SumThisYearIncomeStr = utils.Float64ToIntStrRMB(fd.SumThisYearIncome)
+	fd.SumThisMonthSpendStr = utils.Float64ToIntStrRMB(fd.SumThisMonthSpend)
+	fd.SumThisMonthIncomeStr = utils.Float64ToIntStrRMB(fd.SumThisMonthIncome)
 }
 
 func (fd *FullData) GenerateChartData() {
@@ -221,6 +278,61 @@ func (fd *FullData) GenerateChartData() {
 			fd.WaterfallMonthSub[key] = -value
 		}
 	}
+
+	// 遍历消费和预算生成月度消费、预算数据
+	fd.BudgetMonth = make(ChartData)
+	fd.BudgetReal = make(ChartData)
+	for _, v := range fd.Budgets {
+		if v.Year == 0 || v.Month == 0 {
+			continue
+		}
+		key := fmt.Sprintf("%d-%02d", v.Year, v.Month)
+		fd.BudgetMonth[key] = v.Money
+		fd.BudgetReal[key] = v.Real
+	}
+
+	fd.SpendYear = make(ChartData)
+	for _, v := range fd.Spend.Year.SortKey() {
+		if v == 0 {
+			continue
+		}
+		key := fmt.Sprintf("%d", v)
+		fd.SpendYear[key] = fd.Spend.Year[v]
+	}
+	fd.SpendMonth = make(ChartData)
+	for _, v := range fd.Spend.Month.SortKey() {
+		if v == "" {
+			continue
+		}
+		key := fmt.Sprintf("%s", v)
+		fd.SpendMonth[key] = fd.Spend.Month[v]
+	}
+	fd.SpendDay = make(ChartData)
+	for _, v := range fd.Spend.Day.SortKey() {
+		if v == "" {
+			continue
+		}
+		key := fmt.Sprintf("%s", v)
+		fd.SpendDay[key] = fd.Spend.Day[v]
+	}
+
+	fd.InvestmentYear = make(ChartData)
+	for _, v := range fd.Investment.Year.SortKey() {
+		if v == 0 {
+			continue
+		}
+		key := fmt.Sprintf("%d", v)
+		fd.InvestmentYear[key] = fd.Investment.Year[v]
+	}
+	fd.InvestmentMonth = make(ChartData)
+	for _, v := range fd.Investment.Month.SortKey() {
+		if v == "" {
+			continue
+		}
+		key := fmt.Sprintf("%s", v)
+		fd.InvestmentMonth[key] = fd.Investment.Month[v]
+	}
+
 }
 
 func (fd *FullData) ShowChartData() {
@@ -243,6 +355,23 @@ func (fd *FullData) ShowChartData() {
 	utils.PrettyPrint(fd.WaterfallMonthAdd)
 	fmt.Println("====> WaterfallMonthSub:")
 	utils.PrettyPrint(fd.WaterfallMonthSub)
+
+	fmt.Println("====> BudgetMonth:")
+	utils.PrettyPrint(fd.BudgetMonth)
+	fmt.Println("====> BudgetReal:")
+	utils.PrettyPrint(fd.BudgetReal)
+
+	fmt.Println("====> SpendYear:")
+	utils.PrettyPrint(fd.SpendYear)
+	fmt.Println("====> SpendMonth:")
+	utils.PrettyPrint(fd.SpendMonth)
+	fmt.Println("====> SpendDay:")
+	utils.PrettyPrint(fd.SpendDay)
+
+	fmt.Println("====> InvestmentYear:")
+	utils.PrettyPrint(fd.InvestmentYear)
+	fmt.Println("====> InvestmentMonth:")
+	utils.PrettyPrint(fd.InvestmentMonth)
 }
 
 func (fd *FullData) Report() {

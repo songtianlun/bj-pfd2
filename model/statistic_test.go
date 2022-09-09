@@ -9,16 +9,16 @@ func TestStatisticSpend(t *testing.T) {
 	}
 	iBills := Bills{
 		Bill{PID: "1", Name: "1", Money: 100, Year: 2022, Month: 10, Day: 1,
-			Trace: false, Account: "1", Budget: "1", Type: "1", UsageType: "1"},
+			IsTrace: false, Account: "1", Budget: "1", Type: "1", UsageType: "1"},
 		Bill{PID: "2", Name: "2", Money: 200, Year: 2022, Month: 10, Day: 1,
-			Trace: false, Account: "2", Budget: "2", Type: "2", UsageType: "2"},
+			IsTrace: false, Account: "2", Budget: "2", Type: "2", UsageType: "2"},
 	}
 	wantAccounts := Accounts{
 		Account{PID: "1", Name: "1", Money: 100, IMoney: 0, IEarning: 0, RMoney: 0, Type: "1"},
 		Account{PID: "2", Name: "2", Money: 200, IMoney: 0, IEarning: 0, RMoney: 0, Type: "1"},
 	}
-	if oas := StatisticSpend(&iAccounts, iBills); !oas.Compare(&wantAccounts) {
-		t.Errorf("StatisticSpend() = %v, want %v", oas, wantAccounts)
+	if oas := StatisticBillsToAccounts(&iAccounts, iBills); !oas.Compare(&wantAccounts) {
+		t.Errorf("StatisticBillsToAccounts() = %v, want %v", oas, wantAccounts)
 	}
 }
 
@@ -35,8 +35,8 @@ func TestStatisticInvestment(t *testing.T) {
 		IAccount{PID: "1", Name: "1", Money: 100, Earning: 10, RMoney: 110, RAID: "1"},
 		IAccount{PID: "2", Name: "2", Money: 200, Earning: -20, RMoney: 180, RAID: "2"},
 	}
-	if oas := StatisticInvestment(&iAccounts, &iInvestments); !oas.Compare(&wantAccounts) {
-		t.Errorf("StatisticInvestment() = %v, want %v", oas, wantAccounts)
+	if oas := StatisticInvestmentWithIAccounts(&iAccounts, &iInvestments); !oas.Compare(&wantAccounts) {
+		t.Errorf("StatisticInvestmentWithIAccounts() = %v, want %v", oas, wantAccounts)
 	}
 }
 

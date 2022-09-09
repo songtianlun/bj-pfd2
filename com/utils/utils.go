@@ -149,16 +149,15 @@ func PrintRMB(rmb float64) string {
 	return fmt.Sprintf("%.2f ¥", rmb)
 }
 
-func Float64ToRMB(f float64) string {
+func Float64ToIntStrRMB(f float64) string {
 	return fmt.Sprintf("%.0f", f)
-}
-
-// Version
-func Version() string {
-	return "0.1"
 }
 
 func Encrypt(plaintext string) (cryptext string) {
 	cryptext = fmt.Sprintf("%x", sha1.Sum([]byte(plaintext)))
 	return
+}
+
+func GetTypeString(i interface{}) string {
+	return fmt.Sprintf("%T", i)
 }

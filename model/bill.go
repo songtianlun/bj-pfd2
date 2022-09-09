@@ -2,6 +2,7 @@ package model
 
 import (
 	"bj-pfd2/com/utils"
+	"bj-pfd2/model/chart"
 	"fmt"
 	"sort"
 	"strings"
@@ -9,6 +10,7 @@ import (
 )
 
 type Bills []Bill
+type BillMap map[string]Bill
 type Bill struct {
 	PID       string
 	Name      string
@@ -16,11 +18,35 @@ type Bill struct {
 	Year      int64
 	Month     int64
 	Day       int64
-	Trace     bool
+	IsTrace   bool // 非实际支出为true
 	Account   string
 	Budget    string
 	Type      string
 	UsageType string
+}
+
+func (bs *Bills) Compare(bs2 *Bills) bool {
+	if len(*bs) != len(*bs2) {
+		return false
+	}
+	bsm := bs.ArrayToMap()
+	bsm2 := bs2.ArrayToMap()
+	for k, v := range *bsm {
+		if v != (*bsm2)[k] {
+			return false
+		}
+	}
+	return true
+}
+
+func (bs *Bills) ArrayToMap() *BillMap {
+	bsm := BillMap{}
+	for _, b := range *bs {
+		if b.PID != "" {
+			bsm[b.PID] = b
+		}
+	}
+	return &bsm
 }
 
 func (bs *Bills) Less(i, j int) bool {
@@ -53,8 +79,8 @@ func (b *Bill) isFunctionType() bool {
 	return IsFunctionBillsType(b.UsageType)
 }
 
-func (bs *Bills) Waterfall() *Waterfall {
-	w := &Waterfall{
+func (bs *Bills) Waterfall() *chart.Waterfall {
+	w := &chart.Waterfall{
 		Year:  make(map[int64]float64),
 		Month: make(map[string]float64),
 		Day:   make(map[string]float64),
@@ -81,7 +107,7 @@ func (nb *NotionBody) ParseBill() (bills Bills) {
 			Year:      re.Properties.Year.Formula.Number,
 			Month:     re.Properties.Month.Formula.Number,
 			Day:       re.Properties.Day.Formula.Number,
-			Trace:     re.Properties.IsTrans.Formula.Boolean,
+			IsTrace:   re.Properties.IsTrans.Formula.Boolean,
 			UsageType: re.Properties.BUsageType.Select.Name,
 			Type:      "个人储蓄",
 		}
@@ -236,7 +262,7 @@ func (bs *Bills) GenerateReport() (rep string,
 			}
 		}
 
-		if b.Trace {
+		if b.IsTrace {
 			continue
 		}
 		if b.UsageType != "" {
