@@ -22,10 +22,8 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 # 构建最小镜像
 FROM scratch
 
-# 从 builder 中拷贝资源和主程序到空镜像
+# 从 builder 中拷贝主程序到空镜像
 COPY --from=builder /build/app /
-COPY --from=builder /build/templates /templates
-COPY --from=builder /build/public /public
 
 # 需要运行的命令
 ENTRYPOINT ["/app"]
