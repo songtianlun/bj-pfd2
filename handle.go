@@ -97,7 +97,7 @@ func initHandle() {
 
 	// index
 	web.RegisterHandle("get", "/", handle.Index, handle.Auth)
-	web.RegisterHandle("get", "/home", handle.Home)
+	web.RegisterHandle("get", "/home", handle.Home, handle.Auth)
 
 	// error
 	web.RegisterHandle("get", "/err", handle.Err)
