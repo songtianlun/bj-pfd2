@@ -1,5 +1,7 @@
 package constvar
 
+import "time"
+
 type UserType uint32
 
 const (
@@ -13,6 +15,8 @@ const (
 	UserRegistered UserType = 1
 	UserVIP        UserType = 2
 	UserAdmin      UserType = 10
+
+	CacheTimeout = time.Minute * 30
 )
 
 var ()

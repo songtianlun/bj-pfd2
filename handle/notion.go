@@ -2,6 +2,7 @@ package handle
 
 import (
 	"bj-pfd2/com/cache"
+	"bj-pfd2/com/constvar"
 	"bj-pfd2/com/log"
 	"bj-pfd2/com/rest"
 	"bj-pfd2/model"
@@ -10,10 +11,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
-	"time"
 )
-
-var cacheTimeout = time.Minute * 30
 
 func postToNotion(nUrl string, body model.NotionBodyPrams, notionToken string) (rs string, err error) {
 	log.InfoF("Post To Notion - %v / %v", nUrl, body.GetJsonString())
@@ -43,7 +41,7 @@ func postNotionByCache(url string, body model.NotionBodyPrams, nToken string, no
 			return
 		}
 		go func() {
-			err = cache.Set(key, rs, cacheTimeout)
+			err = cache.Set(key, rs, constvar.CacheTimeout)
 			if err != nil {
 				log.Error("Set cache [%v] error: %v", key, err)
 			}
@@ -101,7 +99,7 @@ func searchDbIdByCache(name string, nToken string, noCache bool) (id string) {
 		id = searchDBIDByNotion(name, nToken)
 		if id != "" {
 			go func() {
-				err := cache.Set(key, id, cacheTimeout)
+				err := cache.Set(key, id, constvar.CacheTimeout)
 				if err != nil {
 					log.Error("Set cache [%v] error: %v", key, err)
 				}
