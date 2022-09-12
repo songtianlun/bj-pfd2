@@ -43,11 +43,12 @@ func initCfg() {
 	cfg.RegisterCfg("log.compress", false, "bool")
 	cfg.RegisterCfg("log.stdout", true, "bool")
 	cfg.RegisterCfg("log.only_stdout", false, "bool")
-	// redis
-	cfg.RegisterCfg("redis.enable", false, "bool")
-	cfg.RegisterCfg("redis.addr", "127.0.0.1:6379", "string")
-	cfg.RegisterCfg("redis.passwd", "", "string")
-	cfg.RegisterCfg("redis.db", 0, "int")
+	// cache
+	cfg.RegisterCfg("cache.enable", true, "bool")
+	cfg.RegisterCfg("cache.type", "memory", "string")
+	cfg.RegisterCfg("cache.addr", "127.0.0.1:6379", "string")
+	cfg.RegisterCfg("cache.passwd", "", "string")
+	cfg.RegisterCfg("cache.db", 0, "int")
 	// bjpfd
 	cfg.RegisterCfg("bjpfd.notion_token", "", "string")
 	cfg.RegisterCfg("bjpfd.account_pid", "", "string")
@@ -74,15 +75,17 @@ func initLog() {
 }
 
 func initCacheDB() {
-	err := cache.InitClient(
-		&cache.CfgRedis{
-			Addr:   cfg.GetString("redis.addr"),
-			Passwd: cfg.GetString("redis.passwd"),
-			Db:     cfg.GetInt("redis.db"),
-		})
-	if err != nil {
-		log.ErrorF("Failed to init Cache DB: %s, cache will not be work.", err.Error())
-		return
+	if cfg.GetBool("cache.enable") {
+		cache.Init(
+			true,
+			cfg.GetString("cache.type"),
+			cfg.GetString("cache.addr"),
+			cfg.GetString("cache.passwd"),
+			cfg.GetInt("cache.db"))
+	} else {
+		cache.Init(
+			false,
+			"", "", "", 0)
 	}
 }
 

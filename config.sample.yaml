@@ -21,6 +21,12 @@ db:
   username: USERNAME                 # DB_USERNAME only mysql
   password: PASSWORD                 # DB_PASSWORD only mysql
 
+cache:
+  enable: false
+  type: redis                            # * CACHE_TYPE redis, memory
+  rdb_addr: xxxx.xxxx.xxxx.xxxx:6379     # * REDIS_ADDR default: xxxx.xxxx.xxxx.xxxx:6379
+  rdb_password: PASSWORD                 # * REDIS_PASSWORD
+  rdb_db: 0                              # * REDIS_DB default: 0
 redis:
   enable: false
   addr: xxxx.xxxx.xxxx.xxxx:6379     # * REDIS_ADDR

@@ -1,8 +1,8 @@
 package cache
 
 import (
-	"bj-pfd2/com/cfg"
 	"bj-pfd2/com/log"
+	"fmt"
 	"github.com/go-redis/redis"
 	"time"
 )
@@ -13,48 +13,27 @@ type CfgRedis struct {
 	Db     int
 }
 
-// 声明一个全局的rdb变量
-var rdb *redis.Client
-
-// InitClient 初始化连接
-func InitClient(c *CfgRedis) (err error) {
-	rdb = redis.NewClient(&redis.Options{
+// InitRedisClient 初始化连接
+func InitRedisClient(c *CfgRedis) *redis.Client {
+	rdb := redis.NewClient(&redis.Options{
 		Addr:     c.Addr,
 		Password: c.Passwd, // no password set
 		DB:       c.Db,     // use default DB
 	})
 
-	_, err = rdb.Ping().Result()
+	_, err := rdb.Ping().Result()
 	if err != nil {
-		return err
+		panic(fmt.Errorf("init redis client failed: %v", err))
 	}
 	log.InfoF("connected to redis server: %s/%v", c.Addr, c.Db)
-	return nil
+	return rdb
 }
 
-// InitClient 初始化连接
-//func InitClient() (err error) {
-//	rdb = redis.NewClient(&redis.Options{
-//		Addr:     "192.168.2.5:6379",
-//		Password: "wRVP7Dd+I0ZwO2b+/ljEinygkycFMFVCNglSDkvjKtt1n6wAT9yjU9yVAzjse5y4OFhS+ZTK9UHZ00MsDlnTGU1e3f0M4XcvtM6Ro4LlSf0dxwZuh/LDBxhE", // no password set
-//		DB:       0,                                                                                                                          // use default DB
-//	})
-//
-//	_, err = rdb.Ping().Result()
-//	if err != nil {
-//		return err
-//	}
-//	return nil
-//}
-
-func Get(key string) string {
+func redisGet(key string) string {
 	if key == "" {
 		return ""
 	}
-	if !cfg.GetBool("redis.enable") {
-		return ""
-	}
-	value, err := rdb.Get(key).Result()
+	value, err := manager.redisClient.Get(key).Result()
 	if err != nil {
 		return ""
 	} else {
@@ -62,13 +41,10 @@ func Get(key string) string {
 	}
 }
 
-func Set(key string, value string) error {
+func redisSet(key string, value string, expiration time.Duration) error {
 	if value == "" || key == "" {
 		return nil
 	}
-	if !cfg.GetBool("redis.enable") {
-		return nil
-	}
 	//log.InfoF("Set [%s] in cache", key)
-	return rdb.Set(key, value, 30*time.Minute).Err()
+	return manager.redisClient.Set(key, value, expiration).Err()
 }

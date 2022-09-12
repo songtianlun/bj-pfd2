@@ -1,7 +1,7 @@
 package handle
 
 import (
-	cache2 "bj-pfd2/com/cache"
+	"bj-pfd2/com/cache"
 	"bj-pfd2/com/log"
 	"bj-pfd2/com/rest"
 	"bj-pfd2/model"
@@ -10,7 +10,10 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 )
+
+var cacheTimeout = time.Minute * 30
 
 func postToNotion(nUrl string, body model.NotionBodyPrams, notionToken string) (rs string, err error) {
 	log.InfoF("Post To Notion - %v / %v", nUrl, body.GetJsonString())
@@ -30,7 +33,7 @@ func postToNotion(nUrl string, body model.NotionBodyPrams, notionToken string) (
 
 func postNotionByCache(url string, body model.NotionBodyPrams, nToken string, noCache bool) (rs string, err error) {
 	key := fmt.Sprintf("notion_%v_body_%v_%v", url, body.GetCacheKey(), nToken)
-	rs = cache2.Get(key)
+	rs = cache.Get(key)
 	if rs != "" && !noCache {
 		log.InfoF("Get by Cache - %v / %v", url, body.GetJsonString())
 	} else {
@@ -40,7 +43,7 @@ func postNotionByCache(url string, body model.NotionBodyPrams, nToken string, no
 			return
 		}
 		go func() {
-			err = cache2.Set(key, rs)
+			err = cache.Set(key, rs, cacheTimeout)
 			if err != nil {
 				log.Error("Set cache [%v] error: %v", key, err)
 			}
@@ -91,14 +94,14 @@ func searchDBIDByNotion(name string, nToken string) (id string) {
 
 func searchDbIdByCache(name string, nToken string, noCache bool) (id string) {
 	key := fmt.Sprintf("notion_db_id_%s_%s", nToken, name)
-	id = cache2.Get(key)
+	id = cache.Get(key)
 	if id != "" && !noCache {
 		log.DebugF("Search Notion DB [%v] ID [%v] by cache", key, id)
 	} else {
 		id = searchDBIDByNotion(name, nToken)
 		if id != "" {
 			go func() {
-				err := cache2.Set(key, id)
+				err := cache.Set(key, id, cacheTimeout)
 				if err != nil {
 					log.Error("Set cache [%v] error: %v", key, err)
 				}
@@ -113,7 +116,7 @@ func GetDbId(name string, nToken string) string {
 }
 
 func GetNotionDbByCache(dbID string, start string, size int32, nToken string, noCache bool, debug bool) (nb model.NotionBody, err error) {
-	cache, err := postNotionByCache("/databases/"+dbID+"/query", model.NotionBodyPrams{
+	c, err := postNotionByCache("/databases/"+dbID+"/query", model.NotionBodyPrams{
 		StartCursor: start,
 		PageSize:    size,
 	}, nToken, noCache)
@@ -122,9 +125,9 @@ func GetNotionDbByCache(dbID string, start string, size int32, nToken string, no
 		return
 	}
 	if debug {
-		fmt.Println(cache)
+		fmt.Println(c)
 	}
-	nb, err = model.ParseNotionBody(cache)
+	nb, err = model.ParseNotionBody(c)
 	return
 }
 
