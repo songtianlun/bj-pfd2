@@ -1,6 +1,6 @@
 {{ define "content" }}
 
-<form class="form-signin center" role="form" action="/authenticate" method="post"
+<form id="login" class="form-signin center" role="form" action="/authenticate" method="post"
       onsubmit="return handle.checkHttps();">
   <h2 class="form-signin-heading">
     <i class="fa fa-map-marker">
@@ -15,5 +15,30 @@
 <!--  <a class="lead pull-right" href="/signup">Sign up</a>-->
 </form>
 
+<script type="text/javascript">
+  $('#login').on('submit', function (e) {
+    e.preventDefault();
+    let value = $('#login').serializeArray();
+    let token = value.length > 0 ? value[0].value : '';
+    // console.log(token);
+    $.ajax({
+        url: '/authenticate',
+        type: 'POST',
+        data: {token: token},
+        success: function (data, textStatus, xhr) {
+            // console.log(data);
+            // console.log(textStatus);
+            // console.log(xhr);
+            window.location.href = '/';
+        },
+        error: function (xhr, textStatus) {
+            // console.log(textStatus);
+            // console.log(xhr);
+            // console.log(xhr.responseText)
+            alert(xhr.responseText)
+        }
+    })
+  })
+</script>
 
 {{ end }}

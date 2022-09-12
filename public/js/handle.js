@@ -277,10 +277,31 @@
         registerEChartsOptions(domName, option);
     }
 
+    let checkHttps = function checkHttps(access_local=true) {
+        if (location.protocol !== "https:") {
+            if ((location.hostname === "localhost" ||
+                    location.hostname === "127.0.0.1") &&
+                access_local === true) {
+                return true
+            }
+            let r = confirm("使用 HTTP 协议传输将导致您的隐私信息被泄漏，帮您重定向到 HTTPS ？");
+            if (r === true) {
+                window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+            } else {
+                alert("禁止使用 HTTPS 协议传输私密数据！");
+            }
+            return false
+        } else {
+            return true
+        }
+    }
+
+
     return {
         registerEChartsOption: registerEChartsOptions,
         registerEchartsWaterfall: registerEchartsWaterfall,
         registerEchartsOverView: registerEchartsOverView,
         registerEchartsLinesChart: registerEchartsLinesChart,
+        checkHttps: checkHttps,
     }
 }));

@@ -35,14 +35,27 @@ func Authenticate(writer http.ResponseWriter, request *http.Request, _ httproute
 	err := request.ParseForm()
 	if err != nil {
 		log.Error("Cannot parse form")
+		writer.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	token := request.PostFormValue("token")
+	if token == "" {
+		log.Error("Token is empty")
+		web.ResponseWithUnauthorized(writer, "Token is empty")
+	}
+	if !TokenValid(token) {
+		web.ResponseWithUnauthorized(writer, "Invalid Notion Token")
 	}
 	cookie := http.Cookie{
 		Name:     "_cookie",
-		Value:    request.PostFormValue("token"),
+		Value:    token,
 		HttpOnly: true,
+		MaxAge:   60 * 60 * 24 * 7,
 	}
 	http.SetCookie(writer, &cookie)
-	http.Redirect(writer, request, "/", 302)
+	writer.WriteHeader(http.StatusOK)
+	return
+	//http.Redirect(writer, request, "/", 302)
 }
 
 // Logout GET /logout

@@ -249,6 +249,15 @@ func GetAllData(nToken string, noCache bool) (fd model.FullData) {
 	return
 }
 
+func TokenValid(token string) bool {
+	aPID := GetDbId("BJPFD-账户-DB", token)
+	if aPID == "" {
+		return false
+	} else {
+		return true
+	}
+}
+
 func ReportWithToken(token string) {
 	fd := GetAllData(token, false)
 	fd.Report()

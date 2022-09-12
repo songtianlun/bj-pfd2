@@ -99,3 +99,12 @@ func ParseTemplateFiles(filenames ...string) (t *template.Template) {
 	t = template.Must(t.ParseFS(gEfs, files...))
 	return
 }
+
+func ResponseWithUnauthorized(w http.ResponseWriter, msg string) {
+	w.WriteHeader(http.StatusUnauthorized)
+	_, err := w.Write([]byte(msg))
+	if err != nil {
+		return
+	}
+	return
+}
