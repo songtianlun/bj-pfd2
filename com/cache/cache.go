@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"bj-pfd2/com/log"
 	"fmt"
 	"github.com/go-redis/redis"
 	"github.com/patrickmn/go-cache"
@@ -27,6 +26,9 @@ var manager *cManager
 //   passwd: redis 密码
 //   db: redis db
 func Init(enable bool, t string, addr string, passwd string, db int) {
+	if manager != nil {
+		return
+	}
 	manager = &cManager{
 		enable: enable,
 		t:      t,
@@ -56,15 +58,12 @@ func Get(key string) string {
 	}
 	switch manager.t {
 	case "redis":
-		log.DebugF("Get cache [%s] from redis", key)
 		return redisGet(key)
 	case "memory":
-		log.DebugF("Get cache [%s] from memory", key)
-		return memoryGet(key)
+		return memoryGet(manager.memCache, key)
 	default:
 		return ""
 	}
-
 }
 
 func Set(key string, value string, expiration time.Duration) error {
@@ -73,11 +72,9 @@ func Set(key string, value string, expiration time.Duration) error {
 	}
 	switch manager.t {
 	case "redis":
-		log.DebugF("Set cache [%s] to redis", key)
 		return redisSet(key, value, expiration)
 	case "memory":
-		log.DebugF("Set cache [%s] to memory", key)
-		return memorySet(key, value, expiration)
+		return memorySet(manager.memCache, key, value, expiration)
 	default:
 		return fmt.Errorf("unknown cache type: %s", manager.t)
 	}
