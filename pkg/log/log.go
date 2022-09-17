@@ -1,7 +1,7 @@
 package log
 
 import (
-	"bj-pfd2/com/cfg"
+	"bj-pfd2/pkg/cfg"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

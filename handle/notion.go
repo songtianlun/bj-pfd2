@@ -1,12 +1,12 @@
 package handle
 
 import (
-	"bj-pfd2/com/cache"
-	"bj-pfd2/com/constvar"
-	"bj-pfd2/com/log"
-	"bj-pfd2/com/rest"
 	"bj-pfd2/model"
 	"bj-pfd2/model/notion"
+	"bj-pfd2/pkg/cache"
+	"bj-pfd2/pkg/constvar"
+	"bj-pfd2/pkg/log"
+	"bj-pfd2/pkg/rest"
 	"fmt"
 	"net/http"
 	"strings"
@@ -90,7 +90,7 @@ func searchDBIDByNotion(name string, nToken string) (id string) {
 	return
 }
 
-func searchDbIdByCache(name string, nToken string, noCache bool) (id string) {
+func GetDbId(name string, nToken string, noCache bool) (id string) {
 	key := fmt.Sprintf("notion_db_id_%s_%s", nToken, name)
 	id = cache.Get(key)
 	if id != "" && !noCache {
@@ -107,10 +107,6 @@ func searchDbIdByCache(name string, nToken string, noCache bool) (id string) {
 		}
 	}
 	return
-}
-
-func GetDbId(name string, nToken string) string {
-	return searchDbIdByCache(name, nToken, false)
 }
 
 func GetNotionDbByCache(dbID string, start string, size int32, nToken string, noCache bool, debug bool) (nb model.NotionBody, err error) {
@@ -211,35 +207,35 @@ func GetAllData(nToken string, noCache bool) (fd model.FullData) {
 
 	wg.Add(5)
 	go func() {
-		aPID := GetDbId("BJPFD-账户-DB", nToken)
+		aPID := GetDbId("BJPFD-账户-DB", nToken, noCache)
 		if aPID != "" {
 			fd.Accounts = GetAllAccount(aPID, nToken, noCache, false, -1)
 		}
 		wg.Done()
 	}()
 	go func() {
-		bPID := GetDbId("BJPFD-账本-DB", nToken)
+		bPID := GetDbId("BJPFD-账本-DB", nToken, noCache)
 		if bPID != "" {
 			fd.Bills = GetAllBills(bPID, nToken, noCache, false, -1)
 		}
 		wg.Done()
 	}()
 	go func() {
-		iaPID := GetDbId("BJPFD-投资账户-DB", nToken)
+		iaPID := GetDbId("BJPFD-投资账户-DB", nToken, noCache)
 		if iaPID != "" {
 			fd.IAccounts = GetAllInvestmentAccount(iaPID, nToken, noCache, false, -1)
 		}
 		wg.Done()
 	}()
 	go func() {
-		ibPID := GetDbId("BJPFD-投资账本-DB", nToken)
+		ibPID := GetDbId("BJPFD-投资账本-DB", nToken, noCache)
 		if ibPID != "" {
 			fd.Investments = GetAllInvestment(ibPID, nToken, noCache, false, -1)
 		}
 		wg.Done()
 	}()
 	go func() {
-		bgPID := GetDbId("BJPFD-预算-DB", nToken)
+		bgPID := GetDbId("BJPFD-预算-DB", nToken, noCache)
 		if bgPID != "" {
 			fd.Budgets = GetAllBudget(bgPID, nToken, noCache, false, -1)
 		}
@@ -251,7 +247,7 @@ func GetAllData(nToken string, noCache bool) (fd model.FullData) {
 }
 
 func TokenValid(token string) bool {
-	aPID := GetDbId("BJPFD-账户-DB", token)
+	aPID := GetDbId("BJPFD-账户-DB", token, false)
 	if aPID == "" {
 		return false
 	} else {

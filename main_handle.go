@@ -1,13 +1,13 @@
 package main
 
 import (
-	"bj-pfd2/com/cache"
-	"bj-pfd2/com/cfg"
-	"bj-pfd2/com/cli"
-	"bj-pfd2/com/log"
-	"bj-pfd2/com/v"
-	"bj-pfd2/com/web"
 	"bj-pfd2/handle"
+	"bj-pfd2/pkg/cache"
+	"bj-pfd2/pkg/cfg"
+	"bj-pfd2/pkg/cli"
+	"bj-pfd2/pkg/log"
+	"bj-pfd2/pkg/v"
+	"bj-pfd2/pkg/web"
 	"embed"
 	"fmt"
 )

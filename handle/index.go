@@ -1,8 +1,7 @@
 package handle
 
 import (
-	"bj-pfd2/com/web"
-	"bj-pfd2/model"
+	"bj-pfd2/pkg/web"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -14,13 +13,10 @@ func Err(writer http.ResponseWriter, request *http.Request, _ httprouter.Params)
 }
 
 func Index(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	token := model.GetToken(request)
-	web.GenerateHTML(writer, token, "layout", "empty.navbar", "index")
-}
-
-func Home(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	token := model.GetToken(request)
-	fullData := GetAllData(token, false)
-	fullData.StatisticAll()
-	web.GenerateHTML(writer, fullData, "layout", "private.navbar", "home")
+	query := request.URL.Query()
+	refresh := false
+	if query.Get("refresh") != "" {
+		refresh = true
+	}
+	web.GenerateHTML(writer, refresh, "layout", "empty.navbar", "index")
 }

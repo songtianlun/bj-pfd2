@@ -1,9 +1,9 @@
 package handle
 
 import (
-	"bj-pfd2/com/log"
-	"bj-pfd2/com/web"
 	"bj-pfd2/model"
+	"bj-pfd2/pkg/log"
+	"bj-pfd2/pkg/web"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )

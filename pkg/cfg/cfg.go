@@ -1,8 +1,8 @@
 package cfg
 
 import (
-	"bj-pfd2/com/constvar"
-	"bj-pfd2/com/utils"
+	"bj-pfd2/pkg/constvar"
+	"bj-pfd2/pkg/utils"
 	"fmt"
 	"github.com/spf13/viper"
 	"strings"

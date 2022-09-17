@@ -1,8 +1,8 @@
 package web
 
 import (
-	"bj-pfd2/com/cfg"
-	"bj-pfd2/com/log"
+	"bj-pfd2/pkg/cfg"
+	"bj-pfd2/pkg/log"
 	"embed"
 	"fmt"
 	"github.com/julienschmidt/httprouter"

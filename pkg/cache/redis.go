@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"bj-pfd2/com/log"
+	"bj-pfd2/pkg/log"
 	"fmt"
 	"github.com/go-redis/redis"
 	"time"

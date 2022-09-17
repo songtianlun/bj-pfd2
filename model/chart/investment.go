@@ -1,7 +1,7 @@
 package chart
 
 import (
-	"bj-pfd2/com/utils"
+	"bj-pfd2/pkg/utils"
 	"fmt"
 	"sort"
 	"strings"

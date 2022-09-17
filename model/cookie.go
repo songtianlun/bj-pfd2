@@ -1,7 +1,7 @@
 package model
 
 import (
-	"bj-pfd2/com/log"
+	"bj-pfd2/pkg/log"
 	"fmt"
 	"net/http"
 )

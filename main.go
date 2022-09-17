@@ -1,10 +1,10 @@
 package main
 
 import (
-	"bj-pfd2/com/cfg"
-	"bj-pfd2/com/log"
-	"bj-pfd2/com/v"
-	"bj-pfd2/com/web"
+	"bj-pfd2/pkg/cfg"
+	"bj-pfd2/pkg/log"
+	"bj-pfd2/pkg/v"
+	"bj-pfd2/pkg/web"
 	"strconv"
 )
 

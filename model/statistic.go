@@ -1,9 +1,9 @@
 package model
 
 import (
-	"bj-pfd2/com/log"
-	"bj-pfd2/com/utils"
 	"bj-pfd2/model/chart"
+	"bj-pfd2/pkg/log"
+	"bj-pfd2/pkg/utils"
 )
 
 func StatisticBillsToAccounts(accounts *Accounts, bills Bills) *Accounts {
