@@ -14,7 +14,6 @@ import (
 )
 
 func postToNotion(nUrl string, body model.NotionBodyPrams, notionToken string) (rs string, err error) {
-	log.InfoF("Post To Notion - %v / %v", nUrl, body.GetJsonString())
 	nUrl = "https://api.notion.com/v1" + nUrl
 	client, err := rest.Client(nUrl, "POST", body.GetReader(),
 		http.Header{
@@ -31,10 +30,14 @@ func postToNotion(nUrl string, body model.NotionBodyPrams, notionToken string) (
 
 func postNotionByCache(url string, body model.NotionBodyPrams, nToken string, noCache bool) (rs string, err error) {
 	key := fmt.Sprintf("notion_%v_body_%v_%v", url, body.GetCacheKey(), nToken)
-	rs = cache.Get(key)
-	if rs != "" && !noCache {
-		log.InfoF("Get by Cache - %v / %v", url, body.GetJsonString())
+
+	if !noCache {
+		rs = cache.Get(key)
+	}
+	if rs != "" {
+		log.InfoF("Get by Cache(cCache:%v) - %v / %v", noCache, url, body.GetJsonString())
 	} else {
+		log.InfoF("Post To Notion(nCache:%v) - %v / %v", noCache, url, body.GetJsonString())
 		rs, err = postToNotion(url, body, nToken)
 		if err != nil {
 			err = fmt.Errorf("PostToNotion error: %v ", err)
@@ -64,8 +67,8 @@ func searchByNotion(name string, nToken string, noCache bool) (res string, err e
 	return
 }
 
-func searchDBIDByNotion(name string, nToken string) (id string) {
-	res, err := searchByNotion(name, nToken, false)
+func searchDBIDByNotion(name string, nToken string, noCache bool) (id string) {
+	res, err := searchByNotion(name, nToken, noCache)
 	if err != nil {
 		log.ErrorF("Err GetNDID - %v", err.Error())
 		return
@@ -94,9 +97,9 @@ func GetDbId(name string, nToken string, noCache bool) (id string) {
 	key := fmt.Sprintf("notion_db_id_%s_%s", nToken, name)
 	id = cache.Get(key)
 	if id != "" && !noCache {
-		log.DebugF("Search Notion DB [%v] ID [%v] by cache", key, id)
+		log.DebugF("Search NDB(noCache:%v) [%v] ID [%v] by cache", noCache, key, id)
 	} else {
-		id = searchDBIDByNotion(name, nToken)
+		id = searchDBIDByNotion(name, nToken, noCache)
 		if id != "" {
 			go func() {
 				err := cache.Set(key, id, constvar.CacheTimeout)

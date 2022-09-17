@@ -16,7 +16,7 @@ func Home(writer http.ResponseWriter, request *http.Request, _ httprouter.Params
 	}
 	log.InfoF("Report With Cache? %v", !refresh)
 	token := model.GetToken(request)
-	fullData := GetAllData(token, !refresh)
+	fullData := GetAllData(token, refresh)
 	fullData.StatisticAll()
 	if refresh {
 		http.Redirect(writer, request, "/", http.StatusFound)
