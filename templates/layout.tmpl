@@ -9,8 +9,12 @@
     <title>BJ-PFD2</title>
 
     <!--    bootstrap v3.2.0-->
+    <script href="//staticfile-cdn.frytea.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="//staticfile-cdn.frytea.com/bootstrap@3.2.0/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="//staticfile-cdn.frytea.com/animate.css@4.1.1/animate.min.css">
+
+    <!--    jquery v2.1.1 -->
+    <script src="//staticfile-cdn.frytea.com/jquery@2.1.1/dist/jquery.min.js"></script>
 
     <!--    font awesome v4.2.0-->
     <link href="//staticfile-cdn.frytea.com/font-awesome@4.2.0/css/font-awesome.min.css" rel="stylesheet" />
@@ -26,32 +30,26 @@
 
   </head>
   <body>
-    {{ template "navbar" . }}
 
-    <div class="container">
-      
-      {{ template "content" . }}
-      
-    </div> <!-- /container -->
-
-    <!-- Footer -->
-    <footer class="text-center text-lg-start bg-light text-muted">
-      </br>
-
-      <!-- Copyright -->
-      <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-        © 2022 Copyright:
-        <a class="text-reset fw-bold" href="https://www.frytea.com/">frytea.com</a>
-        •
-        <a class="text-reset fw-bold" href="http://beian.miit.gov.cn/">粤 ICP 备 19144283 号</a>
+  <div class="site-wrapper">
+    <div class="site-wrapper-inner">
+      <div class="cover-container">
+        {{ template "navbar" . }}
+        <div class="inner cover">
+        <div class="container">
+        {{ template "content" . }}
+        </div>
+        </div>
+{{/*    <div class="mastfoot">*/}}
+      <div class="inner">
+        <p>Copyright © 2022 • <a class="text-reset fw-bold" href="https://www.frytea.com/">Frytea</a>
+          • <a class="text-reset fw-bold" href="http://beian.miit.gov.cn/">粤 ICP 备 19144283 号</a></p>
       </div>
-      <!-- Copyright -->
-    </footer>
-    <!-- Footer -->
+{{/*    </div>*/}}
 
     <script type="text/javascript" src="//staticfile-cdn.frytea.com/jquery@2.1.1/dist/jquery.min.js" charset="utf-8"></script>
     <script src="//staticfile-cdn.frytea.com/bootstrap@3.2.0/dist/js/bootstrap.min.js"></script>
-
+      </div></div></div>
   </body>
 </html>
 

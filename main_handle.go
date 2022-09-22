@@ -95,6 +95,7 @@ func initHandle() {
 	web.RegisterEmbedFs("/static/*filepath", &efsStatic, true)
 	web.RegisterTplEmbedFs(&tplEFS)
 
+	web.RegisterDefaultHandles(handle.Log)
 	// index
 	web.RegisterHandle("get", "/", handle.Index, handle.Auth)
 	web.RegisterHandle("get", "/home", handle.Home, handle.Auth)

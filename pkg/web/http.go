@@ -20,6 +20,7 @@ type Chain struct {
 //var mux *http.ServeMux
 var router *httprouter.Router
 var gEfs *embed.FS
+var defaultHandles []func(handle httprouter.Handle) httprouter.Handle
 
 // Init initializes the web server
 // 导入时自动实例化
@@ -28,9 +29,16 @@ func init() {
 	router = httprouter.New()
 }
 
+func RegisterDefaultHandles(handles ...func(handlerFunc httprouter.Handle) httprouter.Handle) {
+	defaultHandles = append(defaultHandles, handles...)
+}
+
 func RegisterHandle(method string, path string, handle httprouter.Handle, m ...func(handlerFunc httprouter.Handle) httprouter.Handle) {
 	c := Chain{}
 	c.middlewares = append(c.middlewares, m...)
+	if len(defaultHandles) > 0 {
+		c.middlewares = append(c.middlewares, defaultHandles...)
+	}
 	//mux.HandleFunc(path, c.Then(handle))
 	//(*router).GET(path, handle)
 	if method == "post" {

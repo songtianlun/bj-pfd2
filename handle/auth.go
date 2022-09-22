@@ -22,7 +22,7 @@ func Auth(next httprouter.Handle) httprouter.Handle {
 // Login GET /login
 // Show the Login page
 func Login(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	t := web.ParseTemplateFiles("login.layout", "public.navbar", "login")
+	t := web.ParseTemplateFiles("layout", "public.navbar", "login")
 	err := t.Execute(writer, nil)
 	if err != nil {
 		log.Error("Cannot execute template: " + err.Error())
@@ -44,7 +44,7 @@ func Authenticate(writer http.ResponseWriter, request *http.Request, _ httproute
 		web.ResponseWithUnauthorized(writer, "Token is empty")
 	}
 	if !TokenValid(token) {
-		web.ResponseWithUnauthorized(writer, "Invalid Notion Token")
+		web.ResponseWithUnauthorized(writer, "无效的 Notion Token，请检查后重试。")
 	}
 	cookie := http.Cookie{
 		Name:     "_cookie",
@@ -54,8 +54,8 @@ func Authenticate(writer http.ResponseWriter, request *http.Request, _ httproute
 	}
 	http.SetCookie(writer, &cookie)
 	writer.WriteHeader(http.StatusOK)
-	return
 	//http.Redirect(writer, request, "/", 302)
+	return
 }
 
 // Logout GET /logout
