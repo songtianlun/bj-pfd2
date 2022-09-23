@@ -53,24 +53,56 @@ func postNotionByCache(url string, body model.NotionBodyPrams, nToken string, no
 	return
 }
 
-func searchByNotion(name string, nToken string, noCache bool) (res string, err error) {
+func searchNotion(name string, nToken string, filter *model.NBPFilter, size int32, noCache bool) (res string, err error) {
 	res, err = postNotionByCache("/search", model.NotionBodyPrams{
-		Query: name,
-		Filter: &model.NBPFilter{
-			Value:    "database",
-			Property: "object",
-		},
-		PageSize: 100}, nToken, noCache)
+		Query:    name,
+		Filter:   filter,
+		PageSize: size}, nToken, noCache)
 	if err != nil {
 		err = fmt.Errorf("seatchByNotion - %v ", err)
 	}
 	return
 }
 
-func searchDBIDByNotion(name string, nToken string, noCache bool) (id string) {
-	res, err := searchByNotion(name, nToken, noCache)
+func searchDBByNotion(name string, nToken string, noCache bool) (string, error) {
+	return searchNotion(name, nToken, &model.NBPFilter{
+		Value:    "database",
+		Property: "object",
+	}, 100, noCache)
+}
+
+func searchPageByNotion(name string, nToken string, noCache bool) (string, error) {
+	return searchNotion(name, nToken, &model.NBPFilter{
+		Value:    "page",
+		Property: "object",
+	}, 1, noCache)
+}
+
+func searchPageUrlByNotion(name string, nToken string, noCache bool) (url string) {
+	res, err := searchPageByNotion(name, nToken, noCache)
 	if err != nil {
-		log.ErrorF("Err GetNDID - %v", err.Error())
+		log.ErrorF("Err Get Page Url - %v", err.Error())
+	}
+
+	pg := &notion.DBBody{}
+	err = pg.ParseDBBody(res)
+	if err != nil {
+		log.Error("Parse Notion Body error:", err)
+		return
+	}
+	//utils.PrettyPrint(pg)
+	if len(pg.Results) > 0 {
+		url = pg.Results[0].URL
+	} else {
+		log.ErrorF("Search Page [%v] failed, no result.", name)
+	}
+	return
+}
+
+func searchDBIDByNotion(name string, nToken string, noCache bool) (id string) {
+	res, err := searchDBByNotion(name, nToken, noCache)
+	if err != nil {
+		log.ErrorF("Err Get DB ID - %v", err.Error())
 		return
 	}
 	db := &notion.DBBody{}
@@ -207,6 +239,9 @@ func GetAllData(nToken string, noCache bool) (fd model.FullData) {
 	log.InfoF("Get All Data with token: %s", nToken)
 	wg := sync.WaitGroup{}
 	fd.Token = nToken
+	fd.HomePageUrl = searchPageUrlByNotion("Bullet Journal", nToken, true)
+
+	log.InfoF("Notion BJ Url: %s", fd.HomePageUrl)
 
 	wg.Add(5)
 	go func() {

@@ -1,6 +1,7 @@
 {{ define "content" }}
 <div class="loading">Loading&#8230;</div>
 <script type="text/javascript">
+    // 如果 refresh 字段为真，则携带该字段向下传递，否则正常打开
     {{ if . }}
     window.location.href = '/home?refresh=1';
     {{ else }}

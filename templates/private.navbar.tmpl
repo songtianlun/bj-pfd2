@@ -18,6 +18,9 @@
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="https://www.frytea.com/technology/bj-pfd2/home/">Docs</a></li>
+                {{ if .HomePageUrl }}
+                    <li><a href="{{ .HomePageUrl }}">DB</a></li>
+                {{ end }}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/?refresh=1">Refresh</a></li>

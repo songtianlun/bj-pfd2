@@ -11,6 +11,8 @@ type ChartData map[string]float64
 type FullData struct {
 	Token string
 
+	HomePageUrl string // Bullet Journal Notion 地址
+
 	SumMoney               float64 // 资产总额
 	SumMoneyStr            string
 	SumCredit              float64 // 信用总额

@@ -22,5 +22,4 @@ func Home(writer http.ResponseWriter, request *http.Request, _ httprouter.Params
 		http.Redirect(writer, request, "/", http.StatusFound)
 	}
 	web.GenerateHTML(writer, fullData, "layout", "private.navbar", "home")
-
 }
