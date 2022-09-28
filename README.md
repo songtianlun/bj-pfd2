@@ -1,5 +1,7 @@
 # BJ-PFD2
 
+[![Build Status](https://drone.frytea.local/api/badges/songtianlun/bj-pfd2/status.svg?ref=refs/heads/main)](https://drone.frytea.local/songtianlun/bj-pfd2)
+
 记录对象：
 
 - 预算状况（月度）

@@ -8,8 +8,8 @@ import (
 
 func Log(next httprouter.Handle) httprouter.Handle {
 	return func(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-		log.InfoF("Started %s %s for %s", request.Method, request.URL.Path, request.RemoteAddr)
+		log.Infof("Started %s %s for %s", request.Method, request.URL.Path, request.RemoteAddr)
 		next(writer, request, params)
-		//log.InfoF("Completed %s %s for %s", request.Method, request.URL.Path, request.RemoteAddr)
+		//log.Infof("Completed %s %s for %s", request.Method, request.URL.Path, request.RemoteAddr)
 	}
 }

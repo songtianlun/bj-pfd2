@@ -9,14 +9,14 @@ import (
 func CheckToken(request *http.Request) (token string, err error) {
 	cookie, err := request.Cookie("_cookie")
 	if err != nil {
-		log.ErrorF("Check Token fails - %v", err.Error())
+		log.Errorf("Check Token fails - %v", err.Error())
 		return
 	}
 	token = cookie.Value
 	if token == "" {
 		err = fmt.Errorf("token is empty")
 	}
-	log.InfoF("Check Token Pass")
+	log.Infof("Check Token Pass")
 	return
 }
 

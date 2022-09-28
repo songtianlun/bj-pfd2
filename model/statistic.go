@@ -44,7 +44,7 @@ func StatisticAccountWithIAccount(as *Accounts, ias *IAccounts) *Accounts {
 			a.Money += ia.Earning
 			(*asm)[ia.RAID] = a
 		} else {
-			log.DebugF("StatisticAccountWithIAccount: %s[%s] not found", ia.Name, ia.RAID)
+			log.Debugf("StatisticAccountWithIAccount: %s[%s] not found", ia.Name, ia.RAID)
 		}
 	}
 	for k, a := range *asm {

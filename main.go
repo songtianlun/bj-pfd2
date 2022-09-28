@@ -27,6 +27,6 @@ func main() {
 	//fmt.Println(fullData.Accounts.GenerateReport())
 
 	Addr := ":" + strconv.FormatInt(cfg.GetInt64("Port"), 10)
-	log.InfoF("BJ-PFD2[%v] is running on %v", v.GetVersionStr(), Addr)
+	log.Infof("BJ-PFD2[%v] is running on %v", v.GetVersionStr(), Addr)
 	web.Run(Addr)
 }

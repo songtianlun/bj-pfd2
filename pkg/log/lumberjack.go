@@ -2,12 +2,12 @@ package log
 
 import "github.com/natefinch/lumberjack"
 
-func getLumberJackLogger(cfg *logCfg) *lumberjack.Logger {
+func getLumberJackLogger(cfg *CfgLog) *lumberjack.Logger {
 	return &lumberjack.Logger{
-		Filename:   cfg.fileName,
-		MaxSize:    cfg.maxSizeMb,
-		MaxBackups: cfg.maxFileNum,
-		MaxAge:     cfg.maxFileDay,
-		Compress:   cfg.compress,
+		Filename:   cfg.FileName,
+		MaxSize:    cfg.MaxSizeMB,
+		MaxBackups: cfg.MaxFileNum,
+		MaxAge:     cfg.MaxFileDay,
+		Compress:   cfg.Compress,
 	}
 }

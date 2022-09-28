@@ -25,7 +25,7 @@ func InitRedisClient(c *CfgRedis) *redis.Client {
 	if err != nil {
 		panic(fmt.Errorf("init redis client failed: %v", err))
 	}
-	log.InfoF("connected to redis server: %s/%v", c.Addr, c.Db)
+	log.Infof("connected to redis server: %s/%v", c.Addr, c.Db)
 	return rdb
 }
 
@@ -45,6 +45,6 @@ func redisSet(key string, value string, expiration time.Duration) error {
 	if value == "" || key == "" {
 		return nil
 	}
-	//log.InfoF("Set [%s] in cache", key)
+	//log.Infof("Set [%s] in cache", key)
 	return manager.redisClient.Set(key, value, expiration).Err()
 }

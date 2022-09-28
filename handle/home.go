@@ -14,7 +14,7 @@ func Home(writer http.ResponseWriter, request *http.Request, _ httprouter.Params
 	if query.Get("refresh") != "" {
 		refresh = true
 	}
-	log.InfoF("Report With Cache? %v", !refresh)
+	log.Infof("Report With Cache? %v", !refresh)
 	token := model.GetToken(request)
 	fullData := GetAllData(token, refresh)
 	fullData.StatisticAll()

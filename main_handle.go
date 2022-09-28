@@ -65,13 +65,33 @@ func initCfg() {
 }
 
 func initLog() {
-	log.InitLogger(
-		cfg.GetString("log.file_name"),
-		cfg.GetString("log.level"),
-		cfg.GetInt("log.max_size_mb"),
-		cfg.GetInt("log.max_file_num"),
-		cfg.GetInt("log.max_file_day"),
-		cfg.GetBool("log.compress"))
+	//log.InitLogger(
+	//	cfg.GetString("log.file_name"),
+	//	cfg.GetString("log.level"),
+	//	cfg.GetInt("log.max_size_mb"),
+	//	cfg.GetInt("log.max_file_num"),
+	//	cfg.GetInt("log.max_file_day"),
+	//	cfg.GetBool("log.compress"))
+	//log.InitGlobal(log.InitZapAdapter(&log.CfgLog{
+	//	FileName:   cfg.GetString("log.file_name"),
+	//	Level:      cfg.GetString("log.level"),
+	//	MaxSizeMB:  cfg.GetInt("log.max_size_mb"),
+	//	MaxFileNum: cfg.GetInt("log.max_file_num"),
+	//	MaxFileDay: cfg.GetInt("log.max_file_day"),
+	//	Compress:   cfg.GetBool("log.compress"),
+	//	Stdout:     cfg.GetBool("log.stdout"),
+	//	OnlyStdout: cfg.GetBool("log.only_stdout"),
+	//}))
+	log.InitGlobal(log.InitLogrus(&log.CfgLog{
+		FileName:   cfg.GetString("log.file_name"),
+		Level:      cfg.GetString("log.level"),
+		MaxSizeMB:  cfg.GetInt("log.max_size_mb"),
+		MaxFileNum: cfg.GetInt("log.max_file_num"),
+		MaxFileDay: cfg.GetInt("log.max_file_day"),
+		Compress:   cfg.GetBool("log.compress"),
+		Stdout:     cfg.GetBool("log.stdout"),
+		OnlyStdout: cfg.GetBool("log.only_stdout"),
+	}))
 }
 
 func initCacheDB() {

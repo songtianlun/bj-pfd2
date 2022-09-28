@@ -35,9 +35,9 @@ func postNotionByCache(url string, body model.NotionBodyPrams, nToken string, no
 		rs = cache.Get(key)
 	}
 	if rs != "" {
-		log.InfoF("Get by Cache(cCache:%v) - %v / %v", noCache, url, body.GetJsonString())
+		log.Infof("Get by Cache(cCache:%v) - %v / %v", noCache, url, body.GetJsonString())
 	} else {
-		log.InfoF("Post To Notion(nCache:%v) - %v / %v", noCache, url, body.GetJsonString())
+		log.Infof("Post To Notion(nCache:%v) - %v / %v", noCache, url, body.GetJsonString())
 		rs, err = postToNotion(url, body, nToken)
 		if err != nil {
 			err = fmt.Errorf("PostToNotion error: %v ", err)
@@ -81,7 +81,7 @@ func searchPageByNotion(name string, nToken string, noCache bool) (string, error
 func searchPageUrlByNotion(name string, nToken string, noCache bool) (url string) {
 	res, err := searchPageByNotion(name, nToken, noCache)
 	if err != nil {
-		log.ErrorF("Err Get Page Url - %v", err.Error())
+		log.Errorf("Err Get Page Url - %v", err.Error())
 	}
 
 	pg := &notion.DBBody{}
@@ -94,7 +94,7 @@ func searchPageUrlByNotion(name string, nToken string, noCache bool) (url string
 	if len(pg.Results) > 0 {
 		url = pg.Results[0].URL
 	} else {
-		log.ErrorF("Search Page [%v] failed, no result.", name)
+		log.Errorf("Search Page [%v] failed, no result.", name)
 	}
 	return
 }
@@ -102,7 +102,7 @@ func searchPageUrlByNotion(name string, nToken string, noCache bool) (url string
 func searchDBIDByNotion(name string, nToken string, noCache bool) (id string) {
 	res, err := searchDBByNotion(name, nToken, noCache)
 	if err != nil {
-		log.ErrorF("Err Get DB ID - %v", err.Error())
+		log.Errorf("Err Get DB ID - %v", err.Error())
 		return
 	}
 	db := &notion.DBBody{}
@@ -120,7 +120,7 @@ func searchDBIDByNotion(name string, nToken string, noCache bool) (id string) {
 			//fmt.Println(r.Title[0].PlainText, ": ", r.ID)
 		}
 	} else {
-		log.ErrorF("Search DB [%v] failed, no result.", name)
+		log.Errorf("Search DB [%v] failed, no result.", name)
 	}
 	return
 }
@@ -129,7 +129,7 @@ func GetDbId(name string, nToken string, noCache bool) (id string) {
 	key := fmt.Sprintf("notion_db_id_%s_%s", nToken, name)
 	id = cache.Get(key)
 	if id != "" && !noCache {
-		log.DebugF("Search NDB(noCache:%v) [%v] ID [%v] by cache", noCache, key, id)
+		log.Debugf("Search NDB(noCache:%v) [%v] ID [%v] by cache", noCache, key, id)
 	} else {
 		id = searchDBIDByNotion(name, nToken, noCache)
 		if id != "" {
@@ -170,7 +170,7 @@ func GetAllByNotion(aPID string, nToken string, noCache bool, debug bool, maxIte
 		pSize = 100
 	}
 	if aPID == "" {
-		log.ErrorF("Cannot to get all notion db with empty DB id.")
+		log.Errorf("Cannot to get all notion db with empty DB id.")
 		return
 	}
 	for maxItem < 0 || count*pSize < maxItem {
@@ -195,7 +195,7 @@ func GetAllAccount(aPID string, nToken string, noCache bool, debug bool, maxItem
 	for _, n := range ns {
 		as = append(as, n.ParseAccount()...)
 	}
-	log.InfoF("Get [%v] accounts.", len(as))
+	log.Infof("Get [%v] accounts.", len(as))
 	return
 }
 
@@ -204,7 +204,7 @@ func GetAllBills(billsPID string, nToken string, noCache bool, debug bool, maxIt
 	for _, n := range ns {
 		bs = append(bs, n.ParseBill()...)
 	}
-	log.InfoF("Get [%v] bills.", len(bs))
+	log.Infof("Get [%v] bills.", len(bs))
 	return
 }
 
@@ -213,7 +213,7 @@ func GetAllInvestmentAccount(investmentAccountPID string, nToken string, noCache
 	for _, n := range ns {
 		ias = append(ias, n.ParseInvestmentAccount()...)
 	}
-	log.InfoF("Get [%v] investment accounts.", len(ias))
+	log.Infof("Get [%v] investment accounts.", len(ias))
 	return
 }
 
@@ -222,7 +222,7 @@ func GetAllInvestment(investmentPID string, nToken string, noCache bool, debug b
 	for _, n := range ns {
 		is = append(is, n.ParseInvestment()...)
 	}
-	log.InfoF("Get [%v] investments.", len(is))
+	log.Infof("Get [%v] investments.", len(is))
 	return
 }
 
@@ -231,17 +231,17 @@ func GetAllBudget(budgetPid string, nToken string, noCache bool, debug bool, max
 	for _, n := range ns {
 		bs = append(bs, n.ParseBudget()...)
 	}
-	log.InfoF("Get [%v] budgets.", len(bs))
+	log.Infof("Get [%v] budgets.", len(bs))
 	return
 }
 
 func GetAllData(nToken string, noCache bool) (fd model.FullData) {
-	log.InfoF("Get All Data with token: %s", nToken)
+	log.Infof("Get All Data with token: %s", nToken)
 	wg := sync.WaitGroup{}
 	fd.Token = nToken
 	fd.HomePageUrl = searchPageUrlByNotion("Bullet Journal", nToken, true)
 
-	log.InfoF("Notion BJ Url: %s", fd.HomePageUrl)
+	log.Infof("Notion BJ Url: %s", fd.HomePageUrl)
 
 	wg.Add(5)
 	go func() {
