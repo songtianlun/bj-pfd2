@@ -29,7 +29,7 @@ volumes:
 
 trigger:
   branch:
-    - master
+    - main
     - drone
   event:
     - push
