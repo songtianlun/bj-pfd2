@@ -31,3 +31,5 @@ trigger:
   branch:
     - master
     - drone
+  event:
+    - push
