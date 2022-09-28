@@ -26,3 +26,8 @@ steps:
 volumes:
   - name: deps
     temp: {}
+
+trigger:
+  branch:
+    - master
+    - drone
