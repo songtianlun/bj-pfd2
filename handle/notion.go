@@ -239,11 +239,14 @@ func GetAllData(nToken string, noCache bool) (fd model.FullData) {
 	log.Infof("Get All Data with token: %s", nToken)
 	wg := sync.WaitGroup{}
 	fd.Token = nToken
-	fd.HomePageUrl = searchPageUrlByNotion("Bullet Journal", nToken, true)
 
 	log.Infof("Notion BJ Url: %s", fd.HomePageUrl)
 
-	wg.Add(5)
+	wg.Add(6)
+	go func() {
+		fd.HomePageUrl = searchPageUrlByNotion("Bullet Journal", nToken, noCache)
+		wg.Done()
+	}()
 	go func() {
 		aPID := GetDbId("BJPFD-账户-DB", nToken, noCache)
 		if aPID != "" {
