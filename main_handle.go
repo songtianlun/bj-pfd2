@@ -105,7 +105,10 @@ func runCLI() (isCli bool) {
 // Step5 - 初始化 web 服务
 func initRESTHandle() {
 	r = chi.NewRouter()
+	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.URLFormat)
 	web.RegisterTplEmbedFs(&tplEFS)
 	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.FS(efsStatic))))
 	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
