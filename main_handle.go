@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/docgen"
 	"net/http"
 	"strconv"
 )
@@ -98,6 +99,12 @@ func runCLI() (isCli bool) {
 	})
 	cli.RegisterStringCLI("token", "T", "", "Get Report With Notion Token.", func(mapCli cli.MapCli) {
 		handle.ReportWithToken(*mapCli["token"].SValue)
+	})
+	cli.RegisterBoolCLI("router", "R", "Generate Router Doc.", func(mapCli cli.MapCli) {
+		fmt.Println(docgen.MarkdownRoutesDoc(r, docgen.MarkdownOpts{
+			ProjectPath: "bj-pfd2",
+			Intro:       "Welcome to the bjpfd2 router docs.",
+		}))
 	})
 	return cli.CheckCLI()
 }
