@@ -12,7 +12,6 @@ func main() {
 	// Step1 - 初始化配置
 	initCfg()
 	initLog()
-	//initDB() // 本应用设计脱离数据库
 	initCacheDB()
 
 	// Step2 - 检查是否为命令行允许
@@ -21,10 +20,7 @@ func main() {
 	}
 
 	// Step3 - 准备web服务
-
 	initHandle()
-
-	//fmt.Println(fullData.Accounts.GenerateReport())
 
 	Addr := ":" + strconv.FormatInt(cfg.GetInt64("Port"), 10)
 	log.Infof("BJ-PFD2[%v] is running on %v", v.GetVersionStr(), Addr)

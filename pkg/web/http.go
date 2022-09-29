@@ -48,11 +48,11 @@ func RegisterHandle(method string, path string, handle httprouter.Handle, m ...f
 	}
 }
 
-func RegisterDir(path string, file string, strip bool) {
+func RegisterDir(path string, file string) {
 	router.ServeFiles(path, http.Dir(file))
 }
 
-func RegisterEmbedFs(path string, efs *embed.FS, strip bool) {
+func RegisterEmbedFs(path string, efs *embed.FS) {
 	router.ServeFiles(path, http.FS(efs))
 }
 

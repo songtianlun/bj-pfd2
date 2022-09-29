@@ -18,16 +18,7 @@ var efsStatic embed.FS
 //go:embed templates
 var tplEFS embed.FS
 
-func runCLI() (isCli bool) {
-	cli.RegisterBoolCLI("version", "V", "show version info.", func(mapCli cli.MapCli) {
-		fmt.Println(v.GetVersionStr())
-	})
-	cli.RegisterStringCLI("token", "T", "", "Get Report With Notion Token.", func(mapCli cli.MapCli) {
-		handle.ReportWithToken(*mapCli["token"].SValue)
-	})
-	return cli.CheckCLI()
-}
-
+// Step1 - 初始化配置
 func initCfg() {
 	// 首先完成配置项的注册
 	cfg.RegisterCfg("Port", 6010, "int64")
@@ -64,25 +55,9 @@ func initCfg() {
 	}
 }
 
+// Step2 - 初始化日志
 func initLog() {
-	//log.InitLogger(
-	//	cfg.GetString("log.file_name"),
-	//	cfg.GetString("log.level"),
-	//	cfg.GetInt("log.max_size_mb"),
-	//	cfg.GetInt("log.max_file_num"),
-	//	cfg.GetInt("log.max_file_day"),
-	//	cfg.GetBool("log.compress"))
-	//log.InitGlobal(log.InitZapAdapter(&log.CfgLog{
-	//	FileName:   cfg.GetString("log.file_name"),
-	//	Level:      cfg.GetString("log.level"),
-	//	MaxSizeMB:  cfg.GetInt("log.max_size_mb"),
-	//	MaxFileNum: cfg.GetInt("log.max_file_num"),
-	//	MaxFileDay: cfg.GetInt("log.max_file_day"),
-	//	Compress:   cfg.GetBool("log.compress"),
-	//	Stdout:     cfg.GetBool("log.stdout"),
-	//	OnlyStdout: cfg.GetBool("log.only_stdout"),
-	//}))
-	log.InitGlobal(log.InitLogrus(&log.CfgLog{
+	log.InitGlobal(log.NewLogrus(&log.CfgLog{
 		FileName:   cfg.GetString("log.file_name"),
 		Level:      cfg.GetString("log.level"),
 		MaxSizeMB:  cfg.GetInt("log.max_size_mb"),
@@ -94,6 +69,7 @@ func initLog() {
 	}))
 }
 
+// Step3 - 初始化缓存
 func initCacheDB() {
 	if cfg.GetBool("cache.enable") {
 		cache.Init(
@@ -109,10 +85,22 @@ func initCacheDB() {
 	}
 }
 
+// Step4 - 初始化 CLI 命令
+func runCLI() (isCli bool) {
+	cli.RegisterBoolCLI("version", "V", "show version info.", func(mapCli cli.MapCli) {
+		fmt.Println(v.GetVersionStr())
+	})
+	cli.RegisterStringCLI("token", "T", "", "Get Report With Notion Token.", func(mapCli cli.MapCli) {
+		handle.ReportWithToken(*mapCli["token"].SValue)
+	})
+	return cli.CheckCLI()
+}
+
+// Step5 - 初始化 web 服务
 func initHandle() {
 	// static file
 	//web.RegisterDir("/static/", "public", true)
-	web.RegisterEmbedFs("/static/*filepath", &efsStatic, true)
+	web.RegisterEmbedFs("/static/*filepath", &efsStatic)
 	web.RegisterTplEmbedFs(&tplEFS)
 
 	web.RegisterDefaultHandles(handle.Log)
