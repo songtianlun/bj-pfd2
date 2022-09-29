@@ -7,8 +7,8 @@ type CfgLog struct {
 	MaxFileNum int
 	MaxFileDay int
 	Compress   bool
-	Stdout     bool
-	OnlyStdout bool
+	OnlyStdout bool // 开启后仅输出到 stdout
+	Stdout     bool // 开启后同事输出到 stdout 和文件
 }
 
 type Logger interface {

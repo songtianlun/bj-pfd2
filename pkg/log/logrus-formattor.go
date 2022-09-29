@@ -10,7 +10,6 @@ import (
 )
 
 // Modify by "github.com/Lyrics-you/sail-logrus-formatter/sailor"
-// Modify by "github.com/Lyrics-you/sail-logrus-formatter/hooks"
 
 // Formatter - logrus formatter, implements logrus.Formatter
 type Formatter struct {
@@ -67,7 +66,7 @@ const (
 	RFC3339     = "2006-01-02T15:04:05Z07:00"
 	RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
 	Kitchen     = "3:04PM"
-	// Handy time stamps.
+	// Stamp Handy time stamps.
 	Stamp       = "Jan _2 15:04:05"
 	StampMilli  = "Jan _2 15:04:05.000"
 	StampMicro  = "Jan _2 15:04:05.000000"
@@ -75,7 +74,7 @@ const (
 	StampNormal = "2006-01-02 15:04:05.000 MST"
 )
 
-type godate struct {
+type goDate struct {
 	year         string
 	month        string
 	day          string
@@ -87,7 +86,7 @@ type godate struct {
 }
 
 var (
-	date = &godate{
+	date = &goDate{
 		year:         "2006",
 		month:        "01",
 		day:          "02",

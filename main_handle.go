@@ -33,7 +33,7 @@ func initCfg() {
 	cfg.RegisterCfg("log.max_file_day", 7, "int")
 	cfg.RegisterCfg("log.compress", false, "bool")
 	cfg.RegisterCfg("log.stdout", true, "bool")
-	cfg.RegisterCfg("log.only_stdout", false, "bool")
+	cfg.RegisterCfg("log.only_stdout", true, "bool")
 	// cache
 	cfg.RegisterCfg("cache.enable", true, "bool")
 	cfg.RegisterCfg("cache.type", "memory", "string")

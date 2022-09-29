@@ -43,9 +43,9 @@ func (f fieldAdapt) WithFields(fields Fields) Logger {
 	return newFieldAdapt(f.e.WithFields(logrus.Fields(fields)))
 }
 
-func (f fieldAdapt) Tracef(format string, args ...interface{}) {
-	panic("implement me")
-}
+//func (f fieldAdapt) Tracef(format string, args ...interface{}) {
+//	panic("implement me")
+//}
 
 func (f fieldAdapt) WithError(err error) Logger {
 	return newFieldAdapt(f.e.WithError(err))
@@ -157,19 +157,19 @@ func newFieldAdapt(e *logrus.Entry) Logger {
 
 func newLogrus(lCfg *CfgLog) *logrus.Logger {
 	l := logrus.New()
-	//l.SetOutput(os.Stdout)
+
+	// Step1 设置日志级别
 	level, err := logrus.ParseLevel(lCfg.Level)
 	if err != nil {
 		l.SetLevel(logrus.DebugLevel)
 	}
+	l.SetLevel(level)
 
+	// Step2 设置日志格式
 	showPosition := false
 	if level == logrus.DebugLevel {
 		showPosition = true
 	}
-
-	l.SetLevel(level)
-	l.SetOutput(io.MultiWriter(os.Stdout, getLumberJackLogger(lCfg)))
 	l.SetFormatter(&Formatter{
 		FieldsOrder:           nil,
 		TimeStampFormat:       "2006-01-02 15:04:05",
@@ -186,6 +186,16 @@ func newLogrus(lCfg *CfgLog) *logrus.Logger {
 		CallerFirst:           false,
 		CustomCallerFormatter: nil,
 	})
+
+	// Step3 设置日志输出
+	if lCfg.OnlyStdout { // 仅输出到 stdout
+		l.SetOutput(os.Stdout)
+	} else if lCfg.Stdout { // 输出到 stdout 和文件
+		l.SetOutput(io.MultiWriter(os.Stdout, getLumberJackLogger(lCfg)))
+	} else { // 仅输出到文件
+		l.SetOutput(getLumberJackLogger(lCfg))
+	}
+
 	//l.SetReportCaller(true) // 开启后会显示详细的位置
 
 	return l
