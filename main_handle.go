@@ -10,6 +10,10 @@ import (
 	"bj-pfd2/pkg/web"
 	"embed"
 	"fmt"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"net/http"
+	"strconv"
 )
 
 //go:embed public
@@ -17,6 +21,8 @@ var efsStatic embed.FS
 
 //go:embed templates
 var tplEFS embed.FS
+
+var r *chi.Mux
 
 // Step1 - 初始化配置
 func initCfg() {
@@ -97,23 +103,39 @@ func runCLI() (isCli bool) {
 }
 
 // Step5 - 初始化 web 服务
-func initHandle() {
-	// static file
-	//web.RegisterDir("/static/", "public", true)
-	web.RegisterEmbedFs("/static/*filepath", &efsStatic)
+func initRESTHandle() {
+	r = chi.NewRouter()
+	r.Use(middleware.Logger)
 	web.RegisterTplEmbedFs(&tplEFS)
+	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.FS(efsStatic))))
+	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte("pong"))
+		if err != nil {
+			return
+		}
+	})
+	r.Group(func(r chi.Router) {
+		r.Use(handle.Auth)
+		r.Get("/", handle.Index)
+		r.Get("/home", handle.Home)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get("/err", handle.Err)
+		r.Get("/login", handle.Login)
+		r.Post("/authenticate", handle.Authenticate)
+		r.Get("/logout", handle.Logout)
+	})
+}
 
-	web.RegisterDefaultHandles(handle.Log)
-	// index
-	web.RegisterHandle("get", "/", handle.Index, handle.Auth)
-	web.RegisterHandle("get", "/home", handle.Home, handle.Auth)
-
-	// error
-	web.RegisterHandle("get", "/err", handle.Err)
-
-	// defined in route_auth.go
-	web.RegisterHandle("get", "/login", handle.Login)
-	web.RegisterHandle("post", "/authenticate", handle.Authenticate)
-	//
-	web.RegisterHandle("get", "/logout", handle.Logout)
+// Step6 - 启动 web 服务
+func runGlobalWebServer() {
+	if r == nil {
+		panic("please init web handle first.")
+	}
+	Addr := ":" + strconv.FormatInt(cfg.GetInt64("Port"), 10)
+	log.Infof("BJ-PFD2[%v] is running on %v", v.GetVersionStr(), Addr)
+	err := http.ListenAndServe(Addr, r)
+	if err != nil {
+		panic("web server error: " + err.Error())
+	}
 }

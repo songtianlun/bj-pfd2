@@ -3,8 +3,8 @@ module bj-pfd2
 go 1.18
 
 require (
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-redis/redis v6.15.9+incompatible
-	github.com/julienschmidt/httprouter v1.3.0
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/sirupsen/logrus v1.9.0

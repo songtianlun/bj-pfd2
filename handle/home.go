@@ -4,11 +4,10 @@ import (
 	"bj-pfd2/model"
 	"bj-pfd2/pkg/log"
 	"bj-pfd2/pkg/web"
-	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
 
-func Home(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
+func Home(writer http.ResponseWriter, request *http.Request) {
 	query := request.URL.Query()
 	refresh := false
 	if query.Get("refresh") != "" {

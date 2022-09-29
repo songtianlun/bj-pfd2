@@ -4,34 +4,31 @@ import (
 	"bj-pfd2/model"
 	"bj-pfd2/pkg/log"
 	"bj-pfd2/pkg/web"
-	"github.com/julienschmidt/httprouter"
+	"context"
 	"net/http"
 )
 
-func Auth(next httprouter.Handle) httprouter.Handle {
-	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		_, err := model.CheckToken(r)
+func Auth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		token, err := model.CheckToken(r)
 		if err != nil {
 			http.Redirect(w, r, "/login", 302)
 			return
 		}
-		next(w, r, p)
-	}
+		ctx := context.WithValue(r.Context(), "token", token)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
 // Login GET /login
 // Show the Login page
-func Login(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	t := web.ParseTemplateFiles("layout", "public.navbar", "login")
-	err := t.Execute(writer, nil)
-	if err != nil {
-		log.Error("Cannot execute template: " + err.Error())
-		return
-	}
+func Login(writer http.ResponseWriter, request *http.Request) {
+	web.GenerateHTML(writer, nil, "layout", "public.navbar", "login")
 }
 
 // Authenticate the user given the email and password,  POST /authenticate
-func Authenticate(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
+func Authenticate(writer http.ResponseWriter, request *http.Request) {
 	err := request.ParseForm()
 	if err != nil {
 		log.Error("Cannot parse form")
@@ -60,7 +57,7 @@ func Authenticate(writer http.ResponseWriter, request *http.Request, _ httproute
 
 // Logout GET /logout
 // Logs the user out
-func Logout(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
+func Logout(writer http.ResponseWriter, request *http.Request) {
 	_, err := request.Cookie("_cookie")
 	if err != http.ErrNoCookie {
 		log.Warn("Failed to get cookie")

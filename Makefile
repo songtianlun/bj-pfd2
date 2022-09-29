@@ -3,7 +3,7 @@ BASEDIR = $(shell pwd)
 GOPROXY=https://mirrors.cloud.tencent.com/go/
 
 # build with version infos
-versionDir = "bj-pfd2/com/v"
+versionDir = "bj-pfd2/pkg/v"
 gitTag = $(shell if [ "`git describe --tags --abbrev=0 2>/dev/null`" != "" ];then git describe --tags --abbrev=0; else git log --pretty=format:'%h' -n 1; fi)
 buildDate = $(shell TZ=Asia/Shanghai date +%FT%T%z)
 gitCommit = $(shell git log --pretty=format:'%H' -n 1)
@@ -12,7 +12,7 @@ gitTreeState = $(shell if git status|grep -q -E 'clean|干净';then echo clean; 
 ldflags=" -extldflags '-static' -s -w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${buildDate} -X ${versionDir}.gitCommit=${gitCommit} -X ${versionDir}.gitTreeState=${gitTreeState}"
 # -tags netgo 解决 exec user process caused: no such file or directory
 all: build
-	@go build -a -v -tags netgo -ldflags ${ldflags} -o app .
+	go build -a -v -tags netgo -ldflags ${ldflags} -o app .
 .PHONY: clean
 clean:
 	rm -f app
