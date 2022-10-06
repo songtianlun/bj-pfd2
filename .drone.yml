@@ -48,7 +48,7 @@ steps:
     image: quay.io/honestbee/drone-kubectl
     settings:
       kubernetes_server:
-        from_secret: k8S_SERVER
+        from_secret: K8S_SERVER
       kubernetes_token:
         from_secret: K8S_TOKEN
       kubernetes_cert:
