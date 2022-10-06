@@ -58,7 +58,7 @@ steps:
       kubernetes_cert:
         from_secret: K8S_CERT
       namespace: bjpfd2-frytea
-      deployment: bjpfd2-frytea-app
+      deployment: bjpfd2-frytea
       container: bjpfd2-backend
       repo: git.frytea.local:80/songtianlun/bj-pfd2
       tag: ${DRONE_TAG}
