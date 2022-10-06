@@ -10,22 +10,23 @@ clone:
 steps:
   - name: test
     image: golang
+    detach: true
     volumes:
       - name: deps
         path: /go
     commands:
       - go test
 
-  - name: build
-    image: golang
-    volumes:
-      - name: deps
-        path: /go
-    commands:
-      - go build
-    when:
-        event:
-            - tag
+#  - name: build
+#    image: golang
+#    volumes:
+#      - name: deps
+#        path: /go
+#    commands:
+#      - go build
+#    when:
+#        event:
+#            - tag
 
   - name: build-docker
     image: plugins/docker
