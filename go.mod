@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/go-chi/chi/v5 v5.0.7
+	github.com/go-chi/docgen v1.2.0
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -14,7 +15,6 @@ require (
 
 require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/go-chi/docgen v1.2.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
