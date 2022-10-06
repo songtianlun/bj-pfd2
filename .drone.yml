@@ -44,6 +44,24 @@ steps:
     when:
       event:
         - tag
+  - name: deploy to k8s
+    image: quay.io/honestbee/drone-kubectl
+    settings:
+      kubernetes_server:
+        from_secret: k8S_SERVER
+      kubernetes_token:
+        from_secret: K8S_TOKEN
+      kubernetes_cert:
+        from_secret: K8S_CERT
+      namespace: bjpfd2-frytea
+      deployment: bjpfd2-frytea-app
+      container: bjpfd2-backend
+      repo: git.frytea.local:80/songtianlun/bj-pfd2
+      tag: ${DRONE_TAG}
+
+    when:
+      event:
+        - tag
 
 volumes:
   - name: deps
