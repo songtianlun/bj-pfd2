@@ -49,7 +49,7 @@ steps:
         include:
           - refs/tags/release-*
   - name: deploy to k8s
-    image: quay.io/honestbee/drone-kubectl
+    image: quay.io/honestbee/drone-kubernetes
     settings:
       kubernetes_server:
         from_secret: K8S_SERVER
