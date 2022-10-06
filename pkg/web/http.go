@@ -37,3 +37,17 @@ func ResponseWithUnauthorized(w http.ResponseWriter, msg string) {
 	}
 	return
 }
+
+func SetCookie(writer http.ResponseWriter, name string, value string, maxAge int) {
+	cookie := http.Cookie{
+		Name:     name,
+		Value:    value,
+		HttpOnly: true,
+		MaxAge:   maxAge,
+	}
+	http.SetCookie(writer, &cookie)
+}
+
+func SetTokenToCookie(writer http.ResponseWriter, token string) {
+	SetCookie(writer, "_cookie", token, 60*60*24*7)
+}

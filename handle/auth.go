@@ -43,13 +43,7 @@ func Authenticate(writer http.ResponseWriter, request *http.Request) {
 	if !TokenValid(token) {
 		web.ResponseWithUnauthorized(writer, "无效的 Notion Token，请检查后重试。")
 	}
-	cookie := http.Cookie{
-		Name:     "_cookie",
-		Value:    token,
-		HttpOnly: true,
-		MaxAge:   60 * 60 * 24 * 7,
-	}
-	http.SetCookie(writer, &cookie)
+	web.SetTokenToCookie(writer, token)
 	writer.WriteHeader(http.StatusOK)
 	//http.Redirect(writer, request, "/", 302)
 	return

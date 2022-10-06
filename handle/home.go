@@ -20,5 +20,6 @@ func Home(writer http.ResponseWriter, request *http.Request) {
 	if refresh {
 		http.Redirect(writer, request, "/", http.StatusFound)
 	}
+	web.SetTokenToCookie(writer, token)
 	web.GenerateHTML(writer, fullData, "layout", "private.navbar", "home")
 }
