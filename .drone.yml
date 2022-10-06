@@ -30,6 +30,7 @@ steps:
   - name: build-docker
     image: plugins/docker
     settings:
+      registry: git.frytea.local:80
       username:
         from_secret: docker_username
       password:
@@ -39,6 +40,7 @@ steps:
         - ${DRONE_TAG}
         - latest
       dockerfile: Dockerfile
+      insecure: true
     when:
       event:
         - tag
