@@ -16,7 +16,7 @@ const (
 	UserVIP        UserType = 2
 	UserAdmin      UserType = 10
 
-	CacheTimeout = time.Minute * 30
+	CacheTimeout = time.Hour * 24
 )
 
 var ()
