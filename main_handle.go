@@ -10,6 +10,7 @@ import (
 	"bj-pfd2/pkg/web"
 	"embed"
 	"fmt"
+	"github.com/arl/statsviz"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/docgen"
@@ -135,6 +136,12 @@ func initRESTHandle() {
 		r.Post("/authenticate", handle.Authenticate)
 		r.Get("/logout", handle.Logout)
 	})
+	// register statsviz
+	r.Get("/debug/statsviz/ws", statsviz.Ws)
+	r.Get("/debug/statsviz", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/debug/statsviz/", 301)
+	})
+	r.Handle("/debug/statsviz/*", statsviz.Index)
 }
 
 // Step6 - 启动 web 服务
