@@ -59,10 +59,10 @@ func CheckCLI() (isCli bool) {
 			isCli = true
 			break
 		} else if v.Type == "string" && *v.SValue != "" {
-			v.Handle(MapCLI)
-			isCli = true
-			break
-		}
-	}
-	return
+            v.Handle(MapCLI)
+            isCli = true
+            break
+        }
+    }
+    return
 }

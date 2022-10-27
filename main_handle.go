@@ -139,20 +139,20 @@ func initRESTHandle() {
 	// register statsviz
 	r.Get("/debug/statsviz/ws", statsviz.Ws)
 	r.Get("/debug/statsviz", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/debug/statsviz/", 301)
-	})
-	r.Handle("/debug/statsviz/*", statsviz.Index)
+        http.Redirect(w, r, "/debug/statsviz/", 301)
+    })
+    r.Handle("/debug/statsviz/*", statsviz.Index)
 }
 
 // Step6 - 启动 web 服务
 func runGlobalWebServer() {
-	if r == nil {
-		panic("please init web handle first.")
-	}
-	Addr := ":" + strconv.FormatInt(cfg.GetInt64("Port"), 10)
-	log.Infof("BJ-PFD2[%v] is running on %v", v.GetVersionStr(), Addr)
-	err := http.ListenAndServe(Addr, r)
-	if err != nil {
-		panic("web server error: " + err.Error())
-	}
+    if r == nil {
+        panic("please init web handle first.")
+    }
+    Addr := ":" + strconv.FormatInt(cfg.GetInt64("Port"), 10)
+    log.Infof("BJ-PFD2[%v] is running on %v", v.GetVersionStr(), Addr)
+    err := http.ListenAndServe(Addr, r)
+    if err != nil {
+        panic("web server error: " + err.Error())
+    }
 }
