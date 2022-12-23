@@ -31,12 +31,12 @@ steps:
   - name: build-docker
     image: plugins/docker
     settings:
-      registry: git.frytea.local:80
+      registry: git.frytea.com
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      repo: git.frytea.local:80/songtianlun/bj-pfd2
+      repo: git.frytea.com/songtianlun/bj-pfd2
       tags:
         - ${DRONE_TAG}
         - latest
@@ -48,24 +48,6 @@ steps:
       ref:
         include:
           - refs/tags/release-*
-  - name: deploy to k8s
-    image: quay.io/honestbee/drone-kubernetes
-    settings:
-      kubernetes_server:
-        from_secret: K8S_SERVER
-      kubernetes_token:
-        from_secret: K8S_TOKEN
-      kubernetes_cert:
-        from_secret: K8S_CERT
-      namespace: bjpfd2-frytea
-      deployment: bjpfd2-frytea-app
-      container: bjpfd2-backend
-      repo: git.frytea.local:80/songtianlun/bj-pfd2
-      tag: ${DRONE_TAG}
-
-    when:
-      event:
-        - tag
 
 volumes:
   - name: deps
