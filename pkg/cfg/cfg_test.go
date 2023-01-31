@@ -50,15 +50,15 @@ func TestRegisterCfg(t *testing.T) {
 			res := GetInt64(k)
 			if res != v {
 				t.Errorf("GetCfg(%s) = %v, want %v", k, res, v)
-            }
-        } else {
-            t.Errorf("cfg Type Error")
-        }
-    }
+			}
+		} else {
+			t.Errorf("cfg Type Error")
+		}
+	}
 
-    resCfg := GetString(cfgStrKey)
+	resCfg := GetString(cfgStrKey)
 
-    if resCfg != cfgValue {
-        t.Errorf("Set config Failed, want: [%s], got: [%s]", cfgValue, resCfg)
-    }
+	if resCfg != cfgValue {
+		t.Errorf("Set config Failed, want: [%s], got: [%s]", cfgValue, resCfg)
+	}
 }

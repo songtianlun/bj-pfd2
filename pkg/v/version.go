@@ -40,8 +40,8 @@ func GetVersionStr() string {
 	marshalled, err := json.MarshalIndent(&vv, "", "  ")
 	if err != nil {
 		fmt.Printf("%v\n", err)
-        os.Exit(1)
-    }
+		os.Exit(1)
+	}
 
-    return string(marshalled)
+	return string(marshalled)
 }

@@ -1,9 +1,9 @@
 package log
 
 import (
-    "fmt"
-    "runtime"
-    "strings"
+	"fmt"
+	"runtime"
+	"strings"
 )
 
 // Modify by "github.com/Lyrics-you/sail-logrus-formatter/hooks"
@@ -12,22 +12,22 @@ import (
 // The filename of all logrus package calls is logrus/...
 // So by excluding filenames starting with logrus, you can exclude all the logrus package's own function calls
 var (
-    file string = ""
-    line int    = 0
-    name string = ""
+	file string = ""
+	line int    = 0
+	name string = ""
 )
 
 func FindCaller(skip int) string {
 
-    for i := 0; i < 10; i++ {
-        file, line, name = getCaller(skip + i)
-        if !strings.HasPrefix(file, "logrus") {
-            break
-        }
-    }
-    s := strings.Split(name, ".")
-    name := s[len(s)-1]
-    return fmt.Sprintf("%s:%d @%s()", file, line, name)
+	for i := 0; i < 10; i++ {
+		file, line, name = getCaller(skip + i)
+		if !strings.HasPrefix(file, "logrus") {
+			break
+		}
+	}
+	s := strings.Split(name, ".")
+	name := s[len(s)-1]
+	return fmt.Sprintf("%s:%d @%s()", file, line, name)
 }
 
 // Here you can actually get the name of the function: fnName := runtime.FuncForPC(pc).Name()
@@ -35,22 +35,22 @@ func FindCaller(skip int) string {
 // In the standard library log we can choose to log the full path of the file or the file name, but it is most appropriate to use the process concurrently,
 // Because the full path to a file is often long, and the file name is often duplicated in multiple packages, we choose to take one more level, to the level of the upper directory where the file is located.
 func getCaller(skip int) (string, int, string) {
-    pc, file, line, ok := runtime.Caller(skip)
-    fnName := runtime.FuncForPC(pc).Name()
-    // fmt.Println(file)
-    // fmt.Println(line)
-    if !ok {
-        return "", 0, ""
-    }
-    n := 0
-    for i := len(file) - 1; i > 0; i-- {
-        if file[i] == '/' {
-            n++
-            if n >= 2 {
-                file = file[i+1:]
-                break
-            }
-        }
-    }
-    return file, line, fnName
+	pc, file, line, ok := runtime.Caller(skip)
+	fnName := runtime.FuncForPC(pc).Name()
+	// fmt.Println(file)
+	// fmt.Println(line)
+	if !ok {
+		return "", 0, ""
+	}
+	n := 0
+	for i := len(file) - 1; i > 0; i-- {
+		if file[i] == '/' {
+			n++
+			if n >= 2 {
+				file = file[i+1:]
+				break
+			}
+		}
+	}
+	return file, line, fnName
 }
