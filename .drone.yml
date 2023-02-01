@@ -34,8 +34,8 @@ steps:
   - name: build-docker
     image: plugins/docker
     environment:
-      GO111MODULE: on
-      GOPROXY: https://goproxy.cn,direct
+      GO11MODULE: on
+      GOPROXY: "https://goproxy.cn,direct"
     settings:
       registry: git.frytea.com
       username:
