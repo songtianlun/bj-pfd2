@@ -14,14 +14,14 @@ ldflags=" -extldflags '-static' -s -w -X ${versionDir}.gitTag=${gitTag} -X ${ver
 # -tags netgo 解决 exec user process caused: no such file or directory
 all: build
 .PHONY: build
-build:
+build: test
 	go build -a -v -tags netgo -ldflags ${ldflags} -o ${target} .
 .PHONY: clean
 clean:
 	rm -f ${target}
 	find . -name "[._]*.s[a-w][a-z]" | xargs -i rm -f {}
 .PHONY: build
-build: test
+test:
 	gofmt -w .
 	go vet . | grep -v vendor;true
 .PHONY: ca
