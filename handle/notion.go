@@ -18,7 +18,7 @@ func postToNotion(nUrl string, body model.NotionBodyPrams, notionToken string) (
 	client, err := rest.Client(nUrl, "POST", body.GetReader(),
 		http.Header{
 			"Authorization":  {"Bearer " + notionToken},
-			"Notion-Version": {"2021-08-16"},
+			"Notion-Version": {"2022-02-22"},
 		})
 	if err != nil {
 		return
@@ -177,6 +177,7 @@ func GetAllByNotion(aPID string, nToken string, noCache bool, debug bool, maxIte
 		count++
 		db, err := GetNotionDbByCache(aPID, start, pSize, nToken, noCache, debug)
 		if err != nil {
+			log.Errorf("Cannot to get all notion db: %v", err)
 			return
 		}
 		ns = append(ns, db)

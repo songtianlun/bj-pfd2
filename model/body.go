@@ -153,7 +153,7 @@ type Title struct {
 
 type TiText struct {
 	Context string `json:"content"`
-	Link    string `json:"link"`
+	//Link    string `json:"link"`
 }
 
 type CreatedTime struct {
